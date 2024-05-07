@@ -1,4 +1,16 @@
 GXPEngine/obj
 .vs
+.vscode
 GXPEngine.userprefs
 GXPEngine/bin/Release
+GXPEngine/bin/Debug/dosdevices
+GXPEngine/bin/Debug/drive_c
+GXPEngine/bin/Debug/lutris.json
+GXPEngine/bin/Debug/pfx.lock
+GXPEngine/bin/Debug/system.reg
+GXPEngine/bin/Debug/tracked_files
+GXPEngine/bin/Debug/user.reg
+GXPEngine/bin/Debug/userdef.reg
+GXPEngine/bin/Debug/.update-timestamp
+GXPEngine/bin/Debug/GXPEngine.exe
+GXPEngine/bin/Debug/GXPEngine.pdb

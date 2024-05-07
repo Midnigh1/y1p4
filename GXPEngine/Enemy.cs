@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Security.Permissions;
 using GXPEngine;
 
 public class Enemy : Ball
