@@ -100,6 +100,20 @@ public class MyGame : Game
         AddChild(newBall);
     }
 
+    public void AddPlayer(Vec2 position, Vec2 velocity = new Vec2(), bool moving=true)
+    {
+        Ball newBall = new Player(30, position);
+        _movers.Add(newBall);
+        AddChild(newBall);
+    }
+
+    public void AddFinish(Vec2 position)
+    {
+        Ball newBall = new Finish(position);
+        _movers.Add(newBall);
+        AddChild(newBall);
+    }
+
     public Player GetPlayer()
     {
         foreach (Ball mover in _movers)
@@ -177,11 +191,11 @@ public class MyGame : Game
                 _movers.Add(new Player(30, new Vec2(200, 300)));
                 _movers.Add(new Finish(new Vec2(770, 570)));
 
-				int[] itemUses = new int[] { 5, 5, 5, 5, 5, 5 }; // this being declared here might break something but it shouldn't
+				int[] itemUses = new int[] { 5, 5, 5, 0, 0, 0 }; // this being declared here might break something but it shouldn't
                 _spawner.SetRemainingUses(itemUses);
                 break;
             case 2: // test level
-                itemUses = new int[] { 5, 5, 5, 5, 5, 5 };
+                itemUses = new int[] { 5, 5, 5, 0, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
 
                 _movers.Add(new Player(30, new Vec2(700, 100)));
@@ -193,6 +207,14 @@ public class MyGame : Game
                 _movers.Add(new Enemy(20, new Vec2(300, 500)));
                 AddLine(new Vec2(200, 400), new Vec2(200, 600));
                 _movers.Add(new Finish(new Vec2(100, 500)));
+                break;
+            case 3:
+                _movers.Add(new Player(30, new Vec2(93, 82)));
+                _movers.Add(new Enemy(20, new Vec2(49, 504)));
+                _movers.Add(new Enemy(20, new Vec2(102, 502)));
+                _movers.Add(new Enemy(20, new Vec2(151, 506)));
+                _movers.Add(new Finish(new Vec2(682, 477)));
+                AddLine(new Vec2(209,287), new Vec2(207, 510));
                 break;
             /*case 2: // one shooter
                 _movers.Add(new Player(30, new Vec2(200, 150)));
@@ -243,9 +265,8 @@ public class MyGame : Game
                 _spawner.SetRemainingUses(itemUses);
                 break;	*/
             default: // same as case 1
-                _movers.Add(new Player(30, new Vec2(200, 300)));
-                _movers.Add(new Ball(30, new Vec2(400, 340)));
-                _movers.Add(new Finish(new Vec2(700, 500)));
+                itemUses = new int[] { 99, 0, 0, 99, 1, 1 };
+                _spawner.SetRemainingUses(itemUses);
                 break;
         }
 		_stepIndex = -1;
@@ -272,6 +293,10 @@ public class MyGame : Game
         Console.WriteLine("A - draw a line segment (first click selects the start, second click selects the end)");
         Console.WriteLine("S - spawns a small ball");
         Console.WriteLine("D - spawns a bomb");
+        Console.WriteLine("Level making tools:");
+        Console.WriteLine("P - place a player");
+        Console.WriteLine("Z - place a spike");
+        Console.WriteLine("F - place finish");
         Console.WriteLine("Yellow balls are regular ones, orange will kill you and red also shoot small orange balls");
         Console.WriteLine("Big green ball is finish");
         Console.WriteLine("Press a number from 1 to 6 to select level");

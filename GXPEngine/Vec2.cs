@@ -22,7 +22,7 @@ public struct Vec2
 		return new Vec2(left.x+right.x, left.y+right.y);
 	}
 
-	public override string ToString () 
+	public override string ToString() 
 	{
 		return String.Format ("({0},{1})", x, y);
 	}

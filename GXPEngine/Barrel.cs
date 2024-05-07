@@ -47,6 +47,22 @@ class Spawner : GameObject
             activeItem = 2;
             lineStart.SetXY(-1, -1);
         }
+        // level making tools
+        if (Input.GetKeyDown(Key.Z)) // spike
+        {
+            activeItem = 3;
+            lineStart.SetXY(-1, -1);
+        }
+        if (Input.GetKeyDown(Key.P)) // player
+        {
+            activeItem = 4;
+            lineStart.SetXY(-1, -1);
+        }
+        if (Input.GetKeyDown(Key.F)) // finish
+        {
+            activeItem = 5;
+            lineStart.SetXY(-1, -1);
+        }
         if (Input.GetMouseButtonDown(0)) // activate the item
 		{
 			if (remainingUses[activeItem] > 0) 
@@ -61,6 +77,7 @@ class Spawner : GameObject
                         else
                         {
                             ((MyGame)parent).AddLine(lineStart, new Vec2(Input.mouseX, Input.mouseY));
+                            Console.WriteLine("AddLine(new Vec2" + lineStart.ToString() + ", new Vec2(" + Input.mouseX.ToString() + ", " + Input.mouseY.ToString() + "));");
                             lineStart.SetXY(-1, -1);
                             remainingUses[activeItem] -= 1;
                         }
@@ -70,6 +87,18 @@ class Spawner : GameObject
                         break;
                     case 2:
                         ((MyGame)parent).AddBomb(new Vec2(Input.mouseX, Input.mouseY), moving: false);
+                        break;
+                    case 3:
+                        ((MyGame)parent).AddEnemy(20, new Vec2(Input.mouseX, Input.mouseY));
+                        Console.WriteLine("_movers.Add(new Enemy(20, new Vec2(" + Input.mouseX.ToString() + ", " + Input.mouseY.ToString() + ")));");
+                        break;
+                    case 4:
+                        ((MyGame)parent).AddPlayer(new Vec2(Input.mouseX, Input.mouseY));
+                        Console.WriteLine("_movers.Add(new Player(30, new Vec2(" + Input.mouseX.ToString() + ", " + Input.mouseY.ToString() + ")));");
+                        break;
+                    case 5:
+                        ((MyGame)parent).AddFinish(new Vec2(Input.mouseX, Input.mouseY));
+                        Console.WriteLine("_movers.Add(new Finish(new Vec2(" + Input.mouseX.ToString() + ", " + Input.mouseY.ToString() + ")));");
                         break;
                 }
 				if(activeItem != 0) { remainingUses[activeItem] -= 1; } // line is the only item that is not automatically used after one click
