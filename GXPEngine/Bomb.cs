@@ -5,7 +5,7 @@ using GXPEngine;
 public class Bomb : Ball
 {
 	public int explosionForce = 800000;
-	public Bomb (Vec2 pPosition, Vec2 pVelocity=new Vec2(), bool pMoving=true) : base (20, pPosition, pVelocity:pVelocity, moving:pMoving, greenness:100)
+	public Bomb (Vec2 pPosition, Vec2 pVelocity=new Vec2(), bool pMoving=true) : base (20, pPosition, pVelocity:pVelocity, pMoving:pMoving, greenness:100)
 	{
 		
 	}

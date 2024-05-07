@@ -4,25 +4,11 @@ using GXPEngine;
 
 public class Player : Ball
 {
-	Barrel gun;
-	public Player (int pRadius, Vec2 pPosition) : base (pRadius, pPosition, pBounciness:0.98f)
+	Sprite sprite;
+	public Player (int pRadius, Vec2 pPosition) : base (pRadius, pPosition, pBounciness:0.92f)
 	{
-		gun = new Barrel();
-		AddChild(gun);
+		sprite = new Sprite("assets/placeholderCow.png", addCollider:false);
+		AddChild(sprite);
+		sprite.SetOrigin(pRadius, pRadius);
 	}
-
-	public void DeleteGun()
-	{
-		gun.LateDestroy();
-	}
-
-	public int[] GetRemainingUses() // remeining uses of items
-	{
-		return gun.GetRemainingUses();
-    }
-
-    public void SetRemainingUses(int[] array)
-    {
-        gun.SetRemainingUses(array);
-    }
 }

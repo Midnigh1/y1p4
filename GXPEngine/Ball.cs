@@ -11,7 +11,7 @@ public class Ball : EasyDraw
 	public static bool wordy = false;
 	public float bounciness = 0.6f;
 	// For ease of testing / changing, we assume every ball has the same acceleration (gravity):
-	public static Vec2 acceleration = new Vec2 (0, 0);
+	public Vec2 acceleration = new Vec2 (0, 1);
 
 
 	public Vec2 velocity;
@@ -37,12 +37,12 @@ public class Ball : EasyDraw
 	private Arrow _velocityIndicator;
 
 	private float _density = 1;
-	public Ball (int pRadius, Vec2 pPosition, Vec2 pVelocity=new Vec2(), bool moving=true, float pBounciness=0.6f, byte greenness=150) : base (pRadius*2 + 1, pRadius*2 + 1)
+	public Ball (int pRadius, Vec2 pPosition, Vec2 pVelocity=new Vec2(), bool pMoving=true, float pBounciness=0.6f, byte greenness=150) : base (pRadius*2 + 1, pRadius*2 + 1)
 	{
 		radius = pRadius;
 		position = pPosition;
 		velocity = pVelocity;
-		this.moving = moving;
+		moving = pMoving;
 		bounciness = pBounciness;
 
         position = pPosition;
@@ -53,6 +53,11 @@ public class Ball : EasyDraw
 
 		_velocityIndicator = new Arrow(position, new Vec2(0,0), 10);
 		// AddChild(_velocityIndicator);
+
+		if(!moving)
+		{
+			acceleration = new Vec2(0, 0);
+		}
 	}
 
 	void Draw(byte red, byte green, byte blue) {
@@ -200,7 +205,7 @@ public class Ball : EasyDraw
 
         // line caps
 
-        Ball lineCap = new Ball(0, startLine, moving:false);
+        Ball lineCap = new Ball(0, startLine, pMoving:false);
         CollisionInfo capCol = CheckOneBall(lineCap);
 		return capCol; // dont need to check for null since it's the last return anyway
     }
@@ -238,7 +243,11 @@ public class Ball : EasyDraw
 			
 			if (otherBall.IsMoving())
 			{
-				if (col.timeOfImpact == 0)
+                otherBall.velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
+                velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
+                // ditch the newton, i think i fucked something up
+
+                /*if (col.timeOfImpact == 0)
 				{
 					// no newtons laws here so Step doesn't get stuck in an infinite loop
 					otherBall.velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
@@ -250,9 +259,9 @@ public class Ball : EasyDraw
 					Vec2 massCenterVelocity = (this.velocity * this.Mass + otherBall.velocity * otherBall.Mass) / (this.Mass + otherBall.Mass);
 					velocity = massCenterVelocity - cor * (this.velocity - massCenterVelocity);;
 					otherBall.velocity = massCenterVelocity - cor * (otherBall.velocity - massCenterVelocity);
-				}
-			}
-			else
+				}*/
+            }
+            else
 			{
                 velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
             }

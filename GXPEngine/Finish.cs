@@ -4,10 +4,13 @@ using GXPEngine;
 
 public class Finish : Ball
 {
-	public Finish(Vec2 pPosition) : base (30, pPosition, moving:false, greenness:250)
+    Sprite sprite;
+    public Finish(Vec2 pPosition) : base (30, pPosition, pMoving:false, greenness:250)
 	{
-		
-	}
+        sprite = new Sprite("assets/placeholderFinish.png", addCollider: false);
+        AddChild(sprite);
+        sprite.SetOrigin(30, 30);
+    }
 
 	public void Update()
 	{
