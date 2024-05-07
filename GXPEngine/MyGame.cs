@@ -291,8 +291,8 @@ public class MyGame : Game
         Console.WriteLine("Press A/S/D to select ability controlled by mouse");
         Console.WriteLine("Press left mouse button to activate the ability");
         Console.WriteLine("A - draw a line segment (first click selects the start, second click selects the end)");
-        Console.WriteLine("S - spawns a small ball");
-        Console.WriteLine("D - spawns a bomb");
+        Console.WriteLine("S - spawns a small ball (ignore this one probably idk why we would need it)");
+        Console.WriteLine("D - spawns a jump pad");
         Console.WriteLine("Level making tools:");
         Console.WriteLine("P - place a player");
         Console.WriteLine("Z - place a spike");

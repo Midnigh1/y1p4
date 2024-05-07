@@ -271,17 +271,22 @@ public class Ball : EasyDraw
 
                 myGame.gameOver.Text("Game Over", game.width / 2, game.height / 2);
             }
-			else if (this is Bomb || otherBall is Bomb)
+			// bombs are not family friendly so we will make them into jump pads instead
+			// else if (this is Bomb || otherBall is Bomb)
+			// {
+            //     if (this is Bomb)
+            //     {
+			// 		((Bomb)this).Explode();
+            //     }
+			// 	else
+			// 	{
+			// 		((Bomb)otherBall).Explode();
+			// 	}
+            // }
+			else if (otherBall is Bomb) 
 			{
-                if (this is Bomb)
-                {
-					((Bomb)this).Explode();
-                }
-				else
-				{
-					((Bomb)otherBall).Explode();
-				}
-            }
+				this.velocity += new Vec2(0, -30);
+			}
             else if (otherBall is Finish && this is Player)
             {
                 MyGame myGame = (MyGame)game;
