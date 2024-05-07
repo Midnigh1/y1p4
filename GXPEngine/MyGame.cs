@@ -18,7 +18,7 @@ public class MyGame : Game
 	public EasyDraw gameOver;
 	public EasyDraw HUD;
 
-    public MyGame() : base(800, 600, false, false)
+    public MyGame() : base(1920, 1080, false, false)
     {
         _lineContainer = new Canvas(width, height);
         AddChild(_lineContainer);
@@ -206,6 +206,7 @@ public class MyGame : Game
                 _movers.Add(new Enemy(20, new Vec2(275, 450)));
                 _movers.Add(new Enemy(20, new Vec2(300, 500)));
                 AddLine(new Vec2(200, 400), new Vec2(200, 600));
+                AddLine(new Vec2(550,0), new Vec2(550, 250));
                 _movers.Add(new Finish(new Vec2(100, 500)));
                 break;
             case 3:
@@ -265,7 +266,7 @@ public class MyGame : Game
                 _spawner.SetRemainingUses(itemUses);
                 break;	*/
             default: // same as case 1
-                itemUses = new int[] { 99, 0, 0, 99, 1, 1 };
+                itemUses = new int[] { 99, 99, 99, 99, 1, 1 };
                 _spawner.SetRemainingUses(itemUses);
                 break;
         }
@@ -297,9 +298,7 @@ public class MyGame : Game
         Console.WriteLine("P - place a player");
         Console.WriteLine("Z - place a spike");
         Console.WriteLine("F - place finish");
-        Console.WriteLine("Yellow balls are regular ones, orange will kill you and red also shoot small orange balls");
-        Console.WriteLine("Big green ball is finish");
-        Console.WriteLine("Press a number from 1 to 6 to select level");
+        Console.WriteLine("Press a number to select level (0 is empty level for level making)");
         Console.WriteLine("Press R to reset level");
     }
 
