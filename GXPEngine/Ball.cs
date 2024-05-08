@@ -61,7 +61,6 @@ public class Ball : EasyDraw
 	void Draw(byte red, byte green, byte blue) {
 		Fill (red, green, blue);
 		Stroke (red, green, blue);
-		alpha = 0;
 		Ellipse (radius, radius, 2*radius, 2*radius);
 	}
 
@@ -272,17 +271,22 @@ public class Ball : EasyDraw
 
                 myGame.gameOver.Text("Game Over", game.width / 2, game.height / 2);
             }
-			else if (this is Bomb || otherBall is Bomb)
+			// bombs are not family friendly so we will make them into jump pads instead
+			// else if (this is Bomb || otherBall is Bomb)
+			// {
+            //     if (this is Bomb)
+            //     {
+			// 		((Bomb)this).Explode();
+            //     }
+			// 	else
+			// 	{
+			// 		((Bomb)otherBall).Explode();
+			// 	}
+            // }
+			else if (otherBall is Bomb) 
 			{
-                if (this is Bomb)
-                {
-					((Bomb)this).Explode();
-                }
-				else
-				{
-					((Bomb)otherBall).Explode();
-				}
-            }
+				this.velocity += new Vec2(0, -30);
+			}
             else if (otherBall is Finish && this is Player)
             {
                 MyGame myGame = (MyGame)game;
@@ -290,16 +294,13 @@ public class Ball : EasyDraw
                 myGame.Pause();
 
                 myGame.gameOver.Text("You won", game.width / 2, game.height / 2);
+				myGame.femboyBounce.visible = true;
             }
         }
 		else
 		{
             velocity.Reflect(bounciness, col.normal);
-            if (this is Bomb)
-            {
-                ((Bomb)this).Explode();
-            }
-			else if(this is Enemy && ((Enemy)this).IsDestroyedByWalls())
+            if(this is Enemy && ((Enemy)this).IsDestroyedByWalls())
 			{
 				((MyGame)game).RemoveMover(this);
 			}

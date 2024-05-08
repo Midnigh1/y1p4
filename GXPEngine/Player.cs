@@ -6,10 +6,8 @@ public class Player : Ball
 	Sprite sprite;
 	public Player (int pRadius, Vec2 pPosition) : base (pRadius, pPosition, pBounciness:0.92f)
 	{
-		sprite = new Sprite("assets/Cow.png", addCollider:false);
-        sprite.width = pRadius * 2;
-		sprite.height = pRadius * 2;
+		sprite = new Sprite("assets/placeholderCow.png", addCollider:false);
 		AddChild(sprite);
-		sprite.SetXY(-pRadius, -pRadius);
+		sprite.SetOrigin(pRadius, pRadius);
 	}
 }
