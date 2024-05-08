@@ -87,6 +87,7 @@ class Spawner : GameObject
                         break;
                     case 2:
                         ((MyGame)parent).AddBomb(new Vec2(Input.mouseX, Input.mouseY), moving: false);
+                        Console.WriteLine("_movers.Add(new Bomb(new Vec2(" + Input.mouseX.ToString() + ", " + Input.mouseY.ToString() + ")));");
                         break;
                     case 3:
                         ((MyGame)parent).AddEnemy(20, new Vec2(Input.mouseX, Input.mouseY));
@@ -108,9 +109,6 @@ class Spawner : GameObject
 
 	public void Update() 
 	{
-		if(parent!= null) // avoiding scene deloading problems like this
-		{
-            Controls();
-        }
+		
 	}
 }

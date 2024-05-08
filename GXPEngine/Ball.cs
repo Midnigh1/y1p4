@@ -294,16 +294,13 @@ public class Ball : EasyDraw
                 myGame.Pause();
 
                 myGame.gameOver.Text("You won", game.width / 2, game.height / 2);
+				myGame.femboyBounce.visible = true;
             }
         }
 		else
 		{
             velocity.Reflect(bounciness, col.normal);
-            if (this is Bomb)
-            {
-                ((Bomb)this).Explode();
-            }
-			else if(this is Enemy && ((Enemy)this).IsDestroyedByWalls())
+            if(this is Enemy && ((Enemy)this).IsDestroyedByWalls())
 			{
 				((MyGame)game).RemoveMover(this);
 			}
