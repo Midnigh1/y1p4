@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using GXPEngine;
+using GXPEngine.Core;
 
 public class Ball : EasyDraw
 {
@@ -17,6 +18,8 @@ public class Ball : EasyDraw
 
 	private int radius;
 	public readonly bool moving;
+
+	float rotateFactor;
 
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")
@@ -52,6 +55,7 @@ public class Ball : EasyDraw
 		_velocityIndicator = new Arrow(position, new Vec2(0,0), 10);
 		// AddChild(_velocityIndicator);
 		alpha = 0;
+		rotateFactor = velocity.x + velocity.y;
 
 		if(!moving)
 		{
@@ -111,6 +115,9 @@ public class Ball : EasyDraw
 
 		UpdateScreenPosition();
 		ShowDebugInfo();
+
+		rotateFactor = velocity.x;
+        rotation += rotateFactor;
 	}
 
     CollisionInfo CheckAllBalls()
