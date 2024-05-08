@@ -15,7 +15,7 @@ public class Ball : EasyDraw
 	public Vec2 velocity;
 	public Vec2 position;
 
-	public readonly int radius;
+	private int radius;
 	public readonly bool moving;
 
 	// Mass = density * volume.
@@ -57,6 +57,16 @@ public class Ball : EasyDraw
 		{
 			acceleration = new Vec2(0, 0);
 		}
+	}
+
+	public void SetRadius(int pRadius) // for the small size powerup probably
+	{
+		radius = pRadius;
+	}
+
+	public int GetRadius()
+	{
+		return radius;
 	}
 
 	void Draw(byte red, byte green, byte blue) {

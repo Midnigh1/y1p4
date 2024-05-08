@@ -40,15 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Bomb.cs" />
+    <Compile Include="Jumppad.cs" />
     <Compile Include="Finish.cs" />
-    <Compile Include="ShootingEnemy.cs" />
     <Compile Include="GXPEngine\AddOns\Gizmos.cs" />
     <Compile Include="GXPEngine\AddOns\SpriteBatch.cs" />
     <Compile Include="GXPEngine\AddOns\TiledLoader.cs" />
     <Compile Include="MyGame.cs" />
     <Compile Include="Ball.cs" />
-    <Compile Include="Barrel.cs" />
+    <Compile Include="Spawner.cs" />
     <Compile Include="Enemy.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="CollisionInfo.cs" />
