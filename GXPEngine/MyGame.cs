@@ -40,6 +40,16 @@ public class MyGame : Game
 
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
+        Sprite linehud = new Sprite("assets/placeholderCow.png");
+        linehud.SetXY(20, 600);
+        Sprite itemhud = new Sprite("assets/placeholderCow.png");
+        itemhud.SetXY(20, 700);
+        Sprite jumphud = new Sprite("assets/placeholderJumppad.png");
+        jumphud.SetXY(20, 800);
+
+        HUD.AddChild(linehud);
+        HUD.AddChild(itemhud);
+        HUD.AddChild(jumphud);
 
         femboyBounce = new AnimationSprite("assets/femboy-bounce.png", 8, 8, addCollider:false);
         AddChild(femboyBounce);
@@ -401,8 +411,17 @@ public class MyGame : Game
 		HUD.ClearTransparent();
 		if (GetPlayer() != null) 
 		{
+            HUD.Fill (100, 100, 100, alpha:100);
+            HUD.Stroke (0, 0, 0);
+            HUD.Ellipse (60, 640, 80, 80);
+            HUD.Ellipse (60, 740, 80, 80);
+            HUD.Ellipse (60, 840, 80, 80);
             int[] uitext = _spawner.GetRemainingUses();
-            HUD.Text(uitext[0].ToString() + " " + uitext[1].ToString() + " " + uitext[2].ToString() + "\n" + uitext[3].ToString() + " " + uitext[4].ToString() + " " + uitext[5].ToString(), 20, 80);
+            HUD.Fill(255, 255, 255);
+            HUD.Text(uitext[0].ToString() + "x", 80, 680);
+            HUD.Text(uitext[0].ToString() + "x", 80, 780);
+            HUD.Text(uitext[0].ToString() + "x", 80, 880);
+            // HUD.Text(uitext[0].ToString() + " " + uitext[1].ToString() + " " + uitext[2].ToString() + "\n" + uitext[3].ToString() + " " + uitext[4].ToString() + " " + uitext[5].ToString(), 20, 80);
         }
     }
 
