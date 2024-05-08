@@ -15,6 +15,8 @@ namespace GXPEngine
 		public uint color = 0xffffffff;
 		public uint lineWidth = 1;
 
+		public bool magnet = false;
+
 		public LineSegment (float pStartX, float pStartY, float pEndX, float pEndY, uint pColor = 0xffffffff, uint pLineWidth = 1)
 			: this (new Vec2 (pStartX, pStartY), new Vec2 (pEndX, pEndY), pColor, pLineWidth)
 		{
@@ -27,7 +29,17 @@ namespace GXPEngine
 			color = pColor;
 			lineWidth = pLineWidth;
 		}
-	
+		
+		void Update()
+		{
+			if(color == 0xffffff00)
+            {
+				magnet = true;
+			} else
+			{
+				magnet = false;
+			}
+		}		
 		//------------------------------------------------------------------------------------------------------------------------
 		//														RenderSelf()
 		//------------------------------------------------------------------------------------------------------------------------

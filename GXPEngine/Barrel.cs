@@ -6,7 +6,7 @@ class Spawner : GameObject
 {
 	private int activeItem = 0;
 
-	private int[] remainingUses = {3, 4, 2, 2, 4, 2};
+	private int[] remainingUses = {3, 4, 2, 2, 4, 2, 1};
 
 	Vec2 lineStart = new Vec2(-1, -1); // i use a point outside the screen as a way to know when we don't have a point selected
 
@@ -24,13 +24,13 @@ class Spawner : GameObject
 
     public void SetRemainingUses(int[] array)
     {
-        if(array.Length == 6)
+        if(array.Length == 7)
         {
             remainingUses = array;
         }
         else
         {
-            Console.WriteLine("couldnt set remaining uses as array length is " + array.Length.ToString() + ", needs to be 6");
+            Console.WriteLine("couldnt set remaining uses as array length is " + array.Length.ToString() + ", needs to be 7");
         }
     }
 
@@ -65,6 +65,10 @@ class Spawner : GameObject
         {
             activeItem = 5;
             lineStart.SetXY(-1, -1);
+        }
+        if (Input.GetKeyDown(Key.Q)) // attempt at making the gravity line
+        {
+            activeItem = 6;
         }
 
         if (Input.GetMouseButtonDown(0) && ((MyGame)parent)._paused) // activate the item
@@ -105,15 +109,33 @@ class Spawner : GameObject
                         ((MyGame)parent).AddFinish(new Vec2(Input.mouseX, Input.mouseY));
                         Console.WriteLine("_movers.Add(new Finish(new Vec2(" + Input.mouseX.ToString() + ", " + Input.mouseY.ToString() + ")));");
                         break;
+                    case 6:
+                        if (lineStart == new Vec2(-1, -1))
+                        {
+                            lineStart.SetXY(Input.mouseX, Input.mouseY);
+                        }
+                        else
+                        {
+                            ((MyGame)parent).AddGLine(lineStart, new Vec2(Input.mouseX, Input.mouseY));
+                            Console.WriteLine("AddLine(new Vec2" + lineStart.ToString() + ", new Vec2(" + Input.mouseX.ToString() + ", " + Input.mouseY.ToString() + "));");
+                            lineStart.SetXY(-1, -1);
+                            remainingUses[activeItem] -= 1;
+                        }
+                        break;
                 }
-				if(activeItem != 0) { remainingUses[activeItem] -= 1; } // line is the only item that is not automatically used after one click
+				if(activeItem != 0 && activeItem != 6) { remainingUses[activeItem] -= 1; } // line is the only item that is not automatically used after one click
             }
 		}
         if (lineStart != new Vec2(-1, -1) && ((MyGame)parent)._paused)
         {
-
             ((MyGame)parent).RemoveLine(lineStart, oldMouse);
-            ((MyGame)parent).AddLine(lineStart, new Vec2(Input.mouseX, Input.mouseY));
+            if (activeItem == 0)
+            {
+                ((MyGame)parent).AddLine(lineStart, new Vec2(Input.mouseX, Input.mouseY));
+            } else
+            {
+                ((MyGame)parent).AddGLine(lineStart, new Vec2(Input.mouseX, Input.mouseY));
+            }
             oldMouse = new Vec2(Input.mouseX, Input.mouseY);
         }
     }

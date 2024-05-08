@@ -19,8 +19,6 @@ public class Ball : EasyDraw
 	public readonly int radius;
 	public readonly bool moving;
 
-	float rotateFactor;
-
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")
 	public float Mass {
@@ -55,7 +53,7 @@ public class Ball : EasyDraw
 		_velocityIndicator = new Arrow(position, new Vec2(0,0), 10);
 		// AddChild(_velocityIndicator);
 		alpha = 0;
-		rotateFactor = velocity.x + velocity.y;
+		
 
 		if(!moving)
 		{
@@ -106,8 +104,10 @@ public class Ball : EasyDraw
 		UpdateScreenPosition();
 		ShowDebugInfo();
 
-		rotateFactor = velocity.x;
-        rotation += rotateFactor;
+		//rotateeee
+		rotation += velocity.x;
+
+		//
 	}
 
     CollisionInfo CheckAllBalls()
@@ -189,6 +189,8 @@ public class Ball : EasyDraw
             timeOfImpact = 0;
         }
 
+		
+
         if (b > 0 && ballDistance <= radius && timeOfImpact <= 1) // this is stuff from slides again
         {
 
@@ -207,6 +209,15 @@ public class Ball : EasyDraw
                 }
                 return new CollisionInfo((endLine - startLine).Normal(), line, timeOfImpact);
             }
+        } else if (b > 0 && -ballDistance < radius * 3 && line.magnet == true)
+        {
+			Console.WriteLine(-ballDistance);
+            Pull(line);
+			Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
+			acceleration = new Vec2(0, 0);
+        } else
+		{
+            acceleration = new Vec2(0, 1);
         }
 
         // line caps
@@ -315,8 +326,56 @@ public class Ball : EasyDraw
         }
     }
 
+    void Pull(LineSegment line, float pullStrength = 1)
+    {
+        // Calculate vector from player's position to line start
+        Vec2 toStart = line.start - position;
 
-	void BoundaryWrapAround() {
+        // Calculate vector from player's position to line end
+        Vec2 toEnd = line.end - position;
+
+        // Calculate the normalized direction vectors from player to line start and end
+        Vec2 dirStart = toStart.Normalized();
+        Vec2 dirEnd = toEnd.Normalized();
+
+        // Calculate distances from player to line start and end
+        float distStart = toStart.Length();
+        float distEnd = toEnd.Length();
+
+        // Determine the closest point on the line to the player's position
+        Vec2 closestPoint;
+        if (distStart < distEnd)
+        {
+            closestPoint = line.start;
+        }
+        else
+        {
+            closestPoint = line.end;
+        }
+
+        // Calculate vector from player's position to the closest point on the line
+        Vec2 toClosest = closestPoint - position;
+
+        // Calculate distance to the closest point
+        float distClosest = toClosest.Length();
+
+        // Apply pulling force towards the closest point on the line
+        if (distClosest > 0)
+        {
+            // Calculate pull direction
+            Vec2 pullDirection = toClosest.Normalized();
+
+            // Calculate pull magnitude based on distance
+            float pullMagnitude = Mathf.Min(pullStrength / distClosest, pullStrength);
+
+            // Apply the pull force to player's velocity
+            velocity += pullDirection * pullMagnitude;
+        }
+    }
+
+
+
+    void BoundaryWrapAround() {
 		if (position.x < 0) {
 			position.x += game.width;
 		}

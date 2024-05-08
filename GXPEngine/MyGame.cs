@@ -166,6 +166,17 @@ public class MyGame : Game
         _lines.Add (lineBack);
 	}
 
+    public void AddGLine(Vec2 start, Vec2 end)
+    {
+        LineSegment gLine = new LineSegment(start, end, 0xffffff00, 4);
+        AddChild(gLine);
+        _lines.Add(gLine);
+
+        LineSegment gLineBack = new LineSegment(end, start, 0xffffff00, 4);
+        AddChild(gLineBack);
+        _lines.Add(gLineBack);
+    }
+
     public void RemoveLine(Vec2 start, Vec2 end)
     {
         // Find and remove the forward line segment
