@@ -40,6 +40,16 @@ public class MyGame : Game
 
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
+        Sprite linehud = new Sprite("assets/placeholderCow.png");
+        linehud.SetXY(20, 600);
+        Sprite itemhud = new Sprite("assets/placeholderCow.png");
+        itemhud.SetXY(20, 700);
+        Sprite jumphud = new Sprite("assets/placeholderJumppad.png");
+        jumphud.SetXY(20, 800);
+
+        HUD.AddChild(linehud);
+        HUD.AddChild(itemhud);
+        HUD.AddChild(jumphud);
 
         femboyBounce = new AnimationSprite("assets/femboy-bounce.png", 8, 8, addCollider:false);
         AddChild(femboyBounce);
@@ -166,6 +176,16 @@ public class MyGame : Game
         _lines.Add (lineBack);
 	}
 
+    public void AddEscalator (Vec2 start, Vec2 end, bool reverse=false) {
+		LineEscalator line = new LineEscalator (start, end, reverse);
+        AddChild(line);
+        _lines.Add(line);
+
+        LineEscalator lineBack = new LineEscalator(end, start, reverse);
+        AddChild(lineBack);
+        _lines.Add (lineBack);
+	}
+
     public void AddGLine(Vec2 start, Vec2 end)
     {
         LineSegment gLine = new LineSegment(start, end, 0xffffff00, 4);
@@ -222,6 +242,7 @@ public class MyGame : Game
 		gameOver.ClearTransparent();
 		Pause();
         femboyBounce.visible = false;
+        HUD.visible = true;
 
         // boundary:
         AddLine (new Vec2 (width, height), new Vec2 (0, height));
@@ -291,6 +312,8 @@ public class MyGame : Game
                 break;
             default: // level making
                 itemUses = new int[] { 99, 99, 99, 99, 1, 1 };
+                AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
+                AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));
                 _spawner.SetRemainingUses(itemUses);
                 break;
         }
@@ -377,6 +400,7 @@ public class MyGame : Game
         if (Input.GetKeyDown(Key.SPACE))
         {
             UnPause();
+            HUD.visible = false;
         }
     }
 
@@ -410,11 +434,16 @@ public class MyGame : Game
             _spawner.Controls();
         }
 		HUD.ClearTransparent();
-		if (GetPlayer() != null) 
-		{
-            int[] uitext = _spawner.GetRemainingUses();
-            HUD.Text(uitext[0].ToString() + " " + uitext[1].ToString() + " " + uitext[2].ToString() + "\n" + uitext[3].ToString() + " " + uitext[4].ToString() + " " + uitext[5].ToString(), 20, 80);
-        }
+		HUD.Fill (100, 100, 100, alpha:100);
+        HUD.Stroke (0, 0, 0);
+        HUD.Ellipse (60, 640, 80, 80);
+        HUD.Ellipse (60, 740, 80, 80);
+        HUD.Ellipse (60, 840, 80, 80);
+        int[] uitext = _spawner.GetRemainingUses();
+        HUD.Fill(255, 255, 255);
+        HUD.Text(uitext[0].ToString() + "x", 80, 680);
+        HUD.Text(uitext[0].ToString() + "x", 80, 780);
+        HUD.Text(uitext[0].ToString() + "x", 80, 880);
     }
 
 	static void Main() {
