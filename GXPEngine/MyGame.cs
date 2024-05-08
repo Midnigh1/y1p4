@@ -18,6 +18,8 @@ public class MyGame : Game
 	public EasyDraw gameOver;
 	public EasyDraw HUD;
 
+    Sound backgroundMusic;
+
     public AnimationSprite femboyBounce;
 
     public MyGame() : base(1920, 1080, false, false)
@@ -41,6 +43,9 @@ public class MyGame : Game
 
         femboyBounce = new AnimationSprite("assets/femboy-bounce.png", 8, 8, addCollider:false);
         AddChild(femboyBounce);
+
+        backgroundMusic = new Sound("assets/music.wav", looping:true);
+        backgroundMusic.Play();
 
         LoadScene(_startSceneNumber);
 
