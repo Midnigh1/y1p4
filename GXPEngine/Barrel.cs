@@ -9,6 +9,9 @@ class Spawner : GameObject
 	private int[] remainingUses = {3, 4, 2, 2, 4, 2};
 
 	Vec2 lineStart = new Vec2(-1, -1); // i use a point outside the screen as a way to know when we don't have a point selected
+
+    Vec2 oldMouse = new Vec2(-1, -1);
+
     public Spawner() : base() 
 	{
 
@@ -63,8 +66,9 @@ class Spawner : GameObject
             activeItem = 5;
             lineStart.SetXY(-1, -1);
         }
-        if (Input.GetMouseButtonDown(0)) // activate the item
-		{
+
+        if (Input.GetMouseButtonDown(0) && ((MyGame)parent)._paused) // activate the item
+        {
 			if (remainingUses[activeItem] > 0) 
 			{
                 switch (activeItem)
@@ -105,7 +109,14 @@ class Spawner : GameObject
 				if(activeItem != 0) { remainingUses[activeItem] -= 1; } // line is the only item that is not automatically used after one click
             }
 		}
-	}
+        if (lineStart != new Vec2(-1, -1) && ((MyGame)parent)._paused)
+        {
+
+            ((MyGame)parent).RemoveLine(lineStart, oldMouse);
+            ((MyGame)parent).AddLine(lineStart, new Vec2(Input.mouseX, Input.mouseY));
+            oldMouse = new Vec2(Input.mouseX, Input.mouseY);
+        }
+    }
 
 	public void Update() 
 	{

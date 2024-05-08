@@ -51,6 +51,7 @@ public class Ball : EasyDraw
 
 		_velocityIndicator = new Arrow(position, new Vec2(0,0), 10);
 		// AddChild(_velocityIndicator);
+		alpha = 0;
 
 		if(!moving)
 		{

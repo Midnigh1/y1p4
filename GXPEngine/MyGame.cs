@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class MyGame : Game
 {	
 	bool _stepped = false;
-	bool _paused = true;
+	public bool _paused = true;
 	int _stepIndex = 0;
 	int _startSceneNumber = 1;
 
@@ -166,7 +166,26 @@ public class MyGame : Game
         _lines.Add (lineBack);
 	}
 
-	public void Pause()
+    public void RemoveLine(Vec2 start, Vec2 end)
+    {
+        // Find and remove the forward line segment
+        LineSegment lineToRemove = _lines.Find(line => line.start == start && line.end == end);
+        if (lineToRemove != null)
+        {
+            RemoveChild(lineToRemove);
+            _lines.Remove(lineToRemove);
+        }
+
+        // Find and remove the backward line segment
+        LineSegment lineBackToRemove = _lines.Find(line => line.start == end && line.end == start);
+        if (lineBackToRemove != null)
+        {
+            RemoveChild(lineBackToRemove);
+            _lines.Remove(lineBackToRemove);
+        }
+    }
+
+    public void Pause()
 	{
 		_paused = true;
 	}
