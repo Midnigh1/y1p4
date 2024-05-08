@@ -317,6 +317,9 @@ public class Ball : EasyDraw
         }
 		else
 		{
+			if (col.other is LineEscalator) {
+				this.velocity += ((LineEscalator)col.other).collateralVec().Normalized() * ((LineEscalator)col.other).force;
+			}
             velocity.Reflect(bounciness, col.normal);
             if(this is Enemy && ((Enemy)this).IsDestroyedByWalls())
 			{
