@@ -6,7 +6,7 @@ using System.Collections.Generic;
 public class MyGame : Game
 {	
 	bool _stepped = false;
-	bool _paused = true;
+	public bool _paused = true;
 	int _stepIndex = 0;
 	int _startSceneNumber = 1;
 
@@ -18,11 +18,7 @@ public class MyGame : Game
 	public EasyDraw gameOver;
 	public EasyDraw HUD;
 
-    Sound backgroundMusic;
-
-    public AnimationSprite femboyBounce;
-
-    public MyGame() : base(1920, 1080, false, false)
+    public MyGame() : base(800, 600, false, false)
     {
         _lineContainer = new Canvas(width, height);
         AddChild(_lineContainer);
@@ -41,15 +37,7 @@ public class MyGame : Game
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
 
-        femboyBounce = new AnimationSprite("assets/femboy-bounce.png", 8, 8, addCollider:false);
-        AddChild(femboyBounce);
-
-        backgroundMusic = new Sound("assets/music.wav", looping:true);
-        backgroundMusic.Play();
-
         LoadScene(_startSceneNumber);
-
-
 
         PrintInfo();
     }
@@ -105,23 +93,9 @@ public class MyGame : Game
         AddChild(newBall);
     }
 
-    public void AddBomb(Vec2 position, Vec2 velocity = new Vec2(), bool moving=false)
+    public void AddBomb(Vec2 position, Vec2 velocity = new Vec2(), bool moving=true)
     {
         Ball newBall = new Bomb(position, velocity, moving);
-        _movers.Add(newBall);
-        AddChild(newBall);
-    }
-
-    public void AddPlayer(Vec2 position, Vec2 velocity = new Vec2(), bool moving=true)
-    {
-        Ball newBall = new Player(30, position);
-        _movers.Add(newBall);
-        AddChild(newBall);
-    }
-
-    public void AddFinish(Vec2 position)
-    {
-        Ball newBall = new Finish(position);
         _movers.Add(newBall);
         AddChild(newBall);
     }
@@ -166,7 +140,27 @@ public class MyGame : Game
         _lines.Add (lineBack);
 	}
 
-	public void Pause()
+    public void RemoveLine(Vec2 start, Vec2 end)
+    {
+        // Find and remove the forward line segment
+        LineSegment lineToRemove = _lines.Find(line => line.start == start && line.end == end);
+        if (lineToRemove != null)
+        {
+            RemoveChild(lineToRemove);
+            _lines.Remove(lineToRemove);
+        }
+
+        // Find and remove the backward line segment
+        LineSegment lineBackToRemove = _lines.Find(line => line.start == end && line.end == start);
+        if (lineBackToRemove != null)
+        {
+            RemoveChild(lineBackToRemove);
+            _lines.Remove(lineBackToRemove);
+        }
+    }
+
+
+    public void Pause()
 	{
 		_paused = true;
 	}
@@ -191,10 +185,9 @@ public class MyGame : Game
 
 		gameOver.ClearTransparent();
 		Pause();
-        femboyBounce.visible = false;
-
-        // boundary:
-        AddLine (new Vec2 (width, height), new Vec2 (0, height));
+		
+		// boundary:
+		AddLine (new Vec2 (width, height), new Vec2 (0, height));
 		AddLine (new Vec2 (0, height), new Vec2 (0, 0));
 		AddLine (new Vec2 (0, 0), new Vec2 (width, 0));
 		AddLine (new Vec2 (width, 0), new Vec2 (width, height));
@@ -204,11 +197,11 @@ public class MyGame : Game
                 _movers.Add(new Player(30, new Vec2(200, 300)));
                 _movers.Add(new Finish(new Vec2(770, 570)));
 
-				int[] itemUses = new int[] { 5, 5, 5, 0, 0, 0 }; // this being declared here might break something but it shouldn't
+				int[] itemUses = new int[] { 5, 5, 5, 5, 5, 5 }; // this being declared here might break something but it shouldn't
                 _spawner.SetRemainingUses(itemUses);
                 break;
             case 2: // test level
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0 };
+                itemUses = new int[] { 5, 5, 5, 5, 5, 5 };
                 _spawner.SetRemainingUses(itemUses);
 
                 _movers.Add(new Player(30, new Vec2(700, 100)));
@@ -219,49 +212,60 @@ public class MyGame : Game
                 _movers.Add(new Enemy(20, new Vec2(275, 450)));
                 _movers.Add(new Enemy(20, new Vec2(300, 500)));
                 AddLine(new Vec2(200, 400), new Vec2(200, 600));
-                AddLine(new Vec2(550,0), new Vec2(550, 250));
                 _movers.Add(new Finish(new Vec2(100, 500)));
                 break;
-            case 3:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0 };
-                _spawner.SetRemainingUses(itemUses);
-
-                _movers.Add(new Player(30, new Vec2(1750, 150)));
-                AddLine(new Vec2(1600, 0), new Vec2(1600, 300));
-                AddLine(new Vec2(1300, 457), new Vec2(1300, 1080));
-                AddLine(new Vec2(950, 0), new Vec2(950, 520));
-                _movers.Add(new Finish(new Vec2(350, 1000)));
+            /*case 2: // one shooter
+                _movers.Add(new Player(30, new Vec2(200, 150)));
+                _movers.Add(new ShootingEnemy(new Vec2(400, 50), new Vec2(0, 1)));
+                AddLine(new Vec2(370, height), new Vec2(370, 300));
+                _movers.Add(new Finish(new Vec2(700, 500)));
                 break;
-            case 4:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0 };
-                _spawner.SetRemainingUses(itemUses);
-
-                _movers.Add(new Finish(new Vec2(1273, 993)));
-                AddLine(new Vec2(1050, 634), new Vec2(1050, 1080));
-                AddLine(new Vec2(750, 0), new Vec2(750, 524));
-                AddLine(new Vec2(613, 295), new Vec2(750, 176));
-                AddLine(new Vec2(400, 0), new Vec2(400, 100));
-                AddLine(new Vec2(400, 450), new Vec2(400, 1080));
-                _movers.Add(new Player(30, new Vec2(666, 50)));
+            case 3: // shooters hall
+                _movers.Add(new Player(30, new Vec2(200, 400)));
+                _movers.Add(new ShootingEnemy(new Vec2(350, 550), new Vec2(0, -1)));
+                _movers.Add(new ShootingEnemy(new Vec2(400, 550), new Vec2(0, -1)));
+                _movers.Add(new ShootingEnemy(new Vec2(450, 550), new Vec2(0, -1)));
+                _movers.Add(new ShootingEnemy(new Vec2(500, 550), new Vec2(0, -1)));
+                _movers.Add(new ShootingEnemy(new Vec2(550, 550), new Vec2(0, -1)));
+                
+                _movers.Add(new Finish(new Vec2(700, 400)));
+                AddLine(new Vec2(300, 0), new Vec2(300, 300));
+                AddLine(new Vec2(600, 300), new Vec2(300, 300));
                 break;
-            case 5:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0 };
-                _spawner.SetRemainingUses(itemUses);
-
-                _movers.Add(new Player(30, new Vec2(109, 645)));
-                AddLine(new Vec2(711, 712), new Vec2(714, 1069));
-                _movers.Add(new Finish(new Vec2(1297, 1000)));
-                _movers.Add(new Enemy(20, new Vec2(1080, 1030)));
-                _movers.Add(new Enemy(20, new Vec2(1150, 1030)));
-                _movers.Add(new Enemy(20, new Vec2(1220, 1030)));
-                _movers.Add(new Enemy(20, new Vec2(1400, 1030)));
-                _movers.Add(new Enemy(20, new Vec2(1470, 1030)));
-                _movers.Add(new Enemy(20, new Vec2(1540, 1030)));
-                _movers.Add(new Bomb(new Vec2(84, 1048)));
+            case 4: // clear the path
+                _movers.Add(new Player(30, new Vec2(200, 300)));
+                _movers.Add(new Ball(40, new Vec2(500, 100)));
+                _movers.Add(new Ball(40, new Vec2(500, 200)));
+                _movers.Add(new Ball(40, new Vec2(500, 300)));
+                _movers.Add(new Ball(40, new Vec2(500, 400)));
+                _movers.Add(new Ball(40, new Vec2(500, 500)));
+                _movers.Add(new Ball(40, new Vec2(400, 50)));
+                _movers.Add(new Ball(40, new Vec2(400, 150)));
+                _movers.Add(new Ball(40, new Vec2(400, 250)));
+                _movers.Add(new Ball(40, new Vec2(400, 350)));
+                _movers.Add(new Ball(40, new Vec2(400, 450)));
+                _movers.Add(new Ball(40, new Vec2(400, 550)));
+                _movers.Add(new Finish(new Vec2(700, 400)));
                 break;
-            default: // level making
-                itemUses = new int[] { 99, 99, 99, 99, 1, 1 };
+			
+			case 6: // twisted path
+                _movers.Add(new Player(30, new Vec2(200, 100)));
+                AddLine(new Vec2(400, height), new Vec2(400, 200));
+                AddLine(new Vec2(600, 0), new Vec2(600, 400));
+                _movers.Add(new Finish(new Vec2(700, 100)));
+                _movers.Add(new Enemy(20, new Vec2(450, 570)));
+                _movers.Add(new Enemy(20, new Vec2(500, 570)));
+                _movers.Add(new Enemy(20, new Vec2(550, 570)));
+                _movers.Add(new Enemy(20, new Vec2(570, 30)));
+                _movers.Add(new Enemy(20, new Vec2(570, 80)));
+                _movers.Add(new Enemy(20, new Vec2(570, 130)));
+                itemUses = new int[] { 1, 0, 0, 2, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
+                break;	*/
+            default: // same as case 1
+                _movers.Add(new Player(30, new Vec2(200, 300)));
+                _movers.Add(new Ball(30, new Vec2(400, 340)));
+                _movers.Add(new Finish(new Vec2(700, 500)));
                 break;
         }
 		_stepIndex = -1;
@@ -286,13 +290,11 @@ public class MyGame : Game
         Console.WriteLine("Press A/S/D to select ability controlled by mouse");
         Console.WriteLine("Press left mouse button to activate the ability");
         Console.WriteLine("A - draw a line segment (first click selects the start, second click selects the end)");
-        Console.WriteLine("S - spawns a small ball (ignore this one probably idk why we would need it)");
-        Console.WriteLine("D - spawns a jump pad");
-        Console.WriteLine("Level making tools:");
-        Console.WriteLine("P - place a player");
-        Console.WriteLine("Z - place a spike");
-        Console.WriteLine("F - place finish");
-        Console.WriteLine("Press a number to select level (0 is empty level for level making)");
+        Console.WriteLine("S - spawns a small ball");
+        Console.WriteLine("D - spawns a bomb");
+        Console.WriteLine("Yellow balls are regular ones, orange will kill you and red also shoot small orange balls");
+        Console.WriteLine("Big green ball is finish");
+        Console.WriteLine("Press a number from 1 to 6 to select level");
         Console.WriteLine("Press R to reset level");
     }
 
@@ -371,14 +373,9 @@ public class MyGame : Game
 
     void Update () {
 		HandleInput();
-        femboyBounce.NextFrame();
 		if (!_paused) {
 			StepThroughMovers ();
 		}
-        else
-        {
-            _spawner.Controls();
-        }
 		HUD.ClearTransparent();
 		if (GetPlayer() != null) 
 		{
