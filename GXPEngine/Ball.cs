@@ -51,7 +51,7 @@ public class Ball : EasyDraw
 		Draw (150, greenness, 0);
 
 		_velocityIndicator = new Arrow(position, new Vec2(0,0), 10);
-		// AddChild(_velocityIndicator);
+		 AddChild(_velocityIndicator);
 		alpha = 0;
 		
 
@@ -59,7 +59,9 @@ public class Ball : EasyDraw
 		{
 			acceleration = new Vec2(0, 0);
 		}
-	}
+
+        
+    }
 
 	public void SetRadius(int pRadius) // for the small size powerup probably
 	{
@@ -83,7 +85,7 @@ public class Ball : EasyDraw
 	}
 
 	public void Step () {
-
+		Console.WriteLine("acc: " + acceleration);
 		velocity += acceleration; // euler goes whooosh
 
 		bool repeat = true;
@@ -117,7 +119,7 @@ public class Ball : EasyDraw
 		//rotateeee
 		rotation += velocity.x;
 
-		//
+		
 	}
 
     CollisionInfo CheckAllBalls()
@@ -189,6 +191,8 @@ public class Ball : EasyDraw
 
         float ballDistance = (position - startLine).Dot((endLine - startLine).Normal());
 
+		Vec2 distance = position - startLine;	
+
         float timeOfImpact = 2; // if neither of the two conditions below are true, the collision is not happening anyway
         if (a >= 0)
         {
@@ -219,15 +223,16 @@ public class Ball : EasyDraw
                 }
                 return new CollisionInfo((endLine - startLine).Normal(), line, timeOfImpact);
             }
-        } else if (b > 0 && -ballDistance < radius * 3 && line.magnet == true)
+        } else if (CalculateDistance(startLine, endLine, position) < radius * 8 && line.magnet == true)
         {
-			Console.WriteLine(-ballDistance);
-            Pull(line);
-			Console.WriteLine("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA");
-			acceleration = new Vec2(0, 0);
+			Vec2 lineVec = line.end - line.start;
+			float rotation = lineVec.Normal().GetAngleDegrees();
+			acceleration.SetAngleDegrees(rotation);
+			acceleration.Normalize();
+			Console.WriteLine("the thingie: " + acceleration.Length());
         } else
 		{
-            acceleration = new Vec2(0, 1);
+            //acceleration = new Vec2(0, 1);
         }
 
         // line caps
@@ -339,39 +344,26 @@ public class Ball : EasyDraw
         }
     }
 
-    void Pull(LineSegment line, float pullStrength = 1)
+    Vec2 Pull(LineSegment line, float pullStrength = 1)
     {
-        // Calculate vector from player's position to line start
-        Vec2 toStart = line.start - position;
+        // Vector from 'a' to 'b'
+        Vec2 ab = line.end - line.start;
 
-        // Calculate vector from player's position to line end
-        Vec2 toEnd = line.end - position;
+        // Vector from 'a' to 'p'
+        Vec2 ap = position - line.start;
 
-        // Calculate the normalized direction vectors from player to line start and end
-        Vec2 dirStart = toStart.Normalized();
-        Vec2 dirEnd = toEnd.Normalized();
+        // Project 'ap' onto 'ab'
+        float abLengthSquared = ab.Dot(ab);
+        float projectionScalar = ap.Dot(ab) / abLengthSquared;
 
-        // Calculate distances from player to line start and end
-        float distStart = toStart.Length();
-        float distEnd = toEnd.Length();
-
-        // Determine the closest point on the line to the player's position
-        Vec2 closestPoint;
-        if (distStart < distEnd)
-        {
-            closestPoint = line.start;
-        }
-        else
-        {
-            closestPoint = line.end;
-        }
+        // Find nearest point on the line to 'p'
+        Vec2 nearest = line.start + projectionScalar * ab;
 
         // Calculate vector from player's position to the closest point on the line
-        Vec2 toClosest = closestPoint - position;
+        Vec2 toClosest = nearest - position;
 
         // Calculate distance to the closest point
         float distClosest = toClosest.Length();
-
         // Apply pulling force towards the closest point on the line
         if (distClosest > 0)
         {
@@ -379,11 +371,44 @@ public class Ball : EasyDraw
             Vec2 pullDirection = toClosest.Normalized();
 
             // Calculate pull magnitude based on distance
-            float pullMagnitude = Mathf.Min(pullStrength / distClosest, pullStrength);
+            float pullMagnitude = Mathf.Min(pullStrength / distClosest, pullStrength) * pullStrength;
 
-            // Apply the pull force to player's velocity
-            velocity += pullDirection * pullMagnitude;
+            // Calculate the resulting pull vector (direction * magnitude)
+            Vec2 pullVector = pullDirection * pullMagnitude;
+			
+
+            // Create an arrow object to visualize the pull (for demonstration)
+            Arrow arrow = new Arrow(position, pullDirection, pullMagnitude);
+            AddChild(arrow);
+
+            // Return the pull vector (direction * magnitude)
+            return pullVector;
         }
+
+        // If no pull is applied (unlikely in this function), return zero vector
+        return nearest;
+    }
+
+
+    public static float CalculateDistance(Vec2 a, Vec2 b, Vec2 p)
+    {
+        // Vector from 'a' to 'b'
+        Vec2 ab = b - a;
+
+        // Vector from 'a' to 'p'
+        Vec2 ap = p - a;
+
+        // Project 'ap' onto 'ab'
+        float abLengthSquared = ab.Dot(ab);
+        float projectionScalar = ap.Dot(ab) / abLengthSquared;
+
+        // Find nearest point on the line to 'p'
+        Vec2 nearest = a + projectionScalar * ab;
+
+        // Calculate distance from 'p' to the nearest point on the line
+        float distance = Mathf.Sqrt((p.x - nearest.x) * (p.x - nearest.x) + (p.y - nearest.y) * (p.y - nearest.y));
+
+        return distance;
     }
 
 
