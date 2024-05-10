@@ -13,4 +13,5 @@ public class Player : Ball
 		sprite.SetOrigin(pRadius, pRadius);
         sprite.SetXY(-pRadius, -pRadius);
     }
+
 }

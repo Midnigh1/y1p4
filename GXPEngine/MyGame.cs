@@ -20,6 +20,8 @@ public class MyGame : Game
 
     Sound backgroundMusic;
 
+    EasyDraw sphere;
+
     public AnimationSprite femboyBounce;
 
     public MyGame() : base(1920, 1080, false, false)

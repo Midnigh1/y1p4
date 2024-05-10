@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Security.Policy;
 using GXPEngine;
 using GXPEngine.Core;
 
@@ -10,7 +11,7 @@ public class Ball : EasyDraw
 	public static bool wordy = false;
 	public float bounciness = 0.6f;
 	// For ease of testing / changing, we assume every ball has the same acceleration (gravity):
-	public Vec2 acceleration = new Vec2 (0, 1);
+	public Vec2 acceleration = new Vec2 (0, 0.7f);
 
 
 	public Vec2 velocity;
@@ -85,7 +86,6 @@ public class Ball : EasyDraw
 	}
 
 	public void Step () {
-		Console.WriteLine("acc: " + acceleration);
 		velocity += acceleration; // euler goes whooosh
 
 		bool repeat = true;
@@ -116,11 +116,10 @@ public class Ball : EasyDraw
 		UpdateScreenPosition();
 		ShowDebugInfo();
 
-		//rotateeee
-		rotation += velocity.x;
+        //rotateeee
+        rotation += velocity.x;
 
-		
-	}
+    }
 
     CollisionInfo CheckAllBalls()
 	{
@@ -191,8 +190,6 @@ public class Ball : EasyDraw
 
         float ballDistance = (position - startLine).Dot((endLine - startLine).Normal());
 
-		Vec2 distance = position - startLine;	
-
         float timeOfImpact = 2; // if neither of the two conditions below are true, the collision is not happening anyway
         if (a >= 0)
         {
@@ -203,37 +200,51 @@ public class Ball : EasyDraw
             timeOfImpact = 0;
         }
 
-		
-
-        if (b > 0 && ballDistance <= radius && timeOfImpact <= 1) // this is stuff from slides again
-        {
-
-            Vec2 addDist = velocity * timeOfImpact;
-            Vec2 pointOfImpact = _oldPosition + addDist;
-
-            float distAlongLine = (pointOfImpact - startLine).Dot((endLine - startLine).Normalized());
 
 
-
-            if (distAlongLine > 0 && distAlongLine < (startLine - endLine).Length())
-            {
-                if (a > -radius && a < 0)
-                {
-                    return new CollisionInfo((endLine - startLine).Normal(), line, 0);
-                }
-                return new CollisionInfo((endLine - startLine).Normal(), line, timeOfImpact);
-            }
-        } else if (CalculateDistance(startLine, endLine, position) < radius * 8 && line.magnet == true)
-        {
-			Vec2 lineVec = line.end - line.start;
-			float rotation = lineVec.Normal().GetAngleDegrees();
-			acceleration.SetAngleDegrees(rotation);
-			acceleration.Normalize();
-			Console.WriteLine("the thingie: " + acceleration.Length());
-        } else
+		if (b > 0 && ballDistance <= radius && timeOfImpact <= 1) // this is stuff from slides again
 		{
-            //acceleration = new Vec2(0, 1);
-        }
+
+			Vec2 addDist = velocity * timeOfImpact;
+			Vec2 pointOfImpact = _oldPosition + addDist;
+
+			float distAlongLine = (pointOfImpact - startLine).Dot((endLine - startLine).Normalized());
+
+
+
+			if (distAlongLine > 0 && distAlongLine < (startLine - endLine).Length())
+			{
+				if (a > -radius && a < 0)
+				{
+					return new CollisionInfo((endLine - startLine).Normal(), line, 0);
+				}
+				return new CollisionInfo((endLine - startLine).Normal(), line, timeOfImpact);
+			}
+		}
+		else if (line.magnet == true)
+		{
+			Ellipse(line.end.x, line.end.y, (line.end-line.start).Length(), radius * 5);
+			if (b > 0 && CalculateDistance(startLine, endLine, position) < radius * 5)
+			{
+				Vec2 lineVec = line.end - line.start;
+				if ((endLine - position).Length() < (line.end - line.start).Length() && (startLine - position).Length() < (line.end - line.start).Length())
+                {
+					if ((position - lineVec.Normal()).Length() > (position - (lineVec.Normal() * -1)).Length())
+					{
+						float rotation = lineVec.Normal().GetAngleDegrees();
+						acceleration.SetAngleDegrees(rotation);
+				
+					} else
+					{
+                        acceleration.SetAngleDegrees(90);
+                    }
+				}
+            }
+			else
+			{
+				acceleration.SetAngleDegrees(90);
+			}
+		}
 
         // line caps
 
@@ -344,7 +355,9 @@ public class Ball : EasyDraw
         }
     }
 
-    Vec2 Pull(LineSegment line, float pullStrength = 1)
+	//code not neccecary but im keeping it here just in case
+
+/*    Vec2 Pull(LineSegment line, float pullStrength = 1)
     {
         // Vector from 'a' to 'b'
         Vec2 ab = line.end - line.start;
@@ -387,7 +400,7 @@ public class Ball : EasyDraw
 
         // If no pull is applied (unlikely in this function), return zero vector
         return nearest;
-    }
+    }*/
 
 
     public static float CalculateDistance(Vec2 a, Vec2 b, Vec2 p)
@@ -407,6 +420,7 @@ public class Ball : EasyDraw
 
         // Calculate distance from 'p' to the nearest point on the line
         float distance = Mathf.Sqrt((p.x - nearest.x) * (p.x - nearest.x) + (p.y - nearest.y) * (p.y - nearest.y));
+     
 
         return distance;
     }
