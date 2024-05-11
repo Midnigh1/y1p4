@@ -52,7 +52,7 @@ public class Ball : EasyDraw
 		Draw (150, greenness, 0);
 
 		_velocityIndicator = new Arrow(position, new Vec2(0,0), 10);
-		 AddChild(_velocityIndicator);
+		 //AddChild(_velocityIndicator);
 		alpha = 0;
 		
 

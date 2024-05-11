@@ -1,4 +1,5 @@
 using System;
+using System.Drawing;
 using GXPEngine.Core;
 
 namespace GXPEngine
@@ -209,20 +210,41 @@ namespace GXPEngine
 		public void Turn (float angle) {
 			rotation = _rotation + angle;
 		}
-		
-		//------------------------------------------------------------------------------------------------------------------------
-		//														Move()
-		//------------------------------------------------------------------------------------------------------------------------
-		/// <summary>
-		/// Move the object, based on its current rotation.
-		/// </summary>
-		/// <param name='stepX'>
-		/// Step x.
-		/// </param>
-		/// <param name='stepY'>
-		/// Step y.
-		/// </param>
-		public void Move (float stepX, float stepY) {
+
+        //------------------------------------------------------------------------------------------------------------------------
+        //														TurnAround()
+        //------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Turn the specified object with a certain angle in degrees around a vec2.
+        /// </summary>
+        /// <param name='angle'>
+        /// Angle.
+        /// </param>
+		/// <param name='point'>
+        /// the point around which to rotate
+        /// </param>
+		public void TurnAround(float angle, Vec2 point)
+        {
+            x -= point.x;
+			y -= point.y;
+            rotation = _rotation + angle;
+            x += point.x;
+			y += point.y;
+        }
+
+        //------------------------------------------------------------------------------------------------------------------------
+        //														Move()
+        //------------------------------------------------------------------------------------------------------------------------
+        /// <summary>
+        /// Move the object, based on its current rotation.
+        /// </summary>
+        /// <param name='stepX'>
+        /// Step x.
+        /// </param>
+        /// <param name='stepY'>
+        /// Step y.
+        /// </param>
+        public void Move (float stepX, float stepY) {
 			float r = _rotation * Mathf.PI / 180.0f;
 			float cs = Mathf.Cos (r);
 			float sn = Mathf.Sin (r);

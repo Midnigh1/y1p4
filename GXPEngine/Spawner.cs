@@ -23,7 +23,7 @@ class Spawner : GameObject
     }
 
     public void SetRemainingUses(int[] array)
-    {
+    { 
         if(array.Length == 7)
         {
             remainingUses = array;

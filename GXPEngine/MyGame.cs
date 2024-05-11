@@ -2,6 +2,7 @@ using System;
 using GXPEngine;
 using System.Drawing;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 
 public class MyGame : Game
 {	
@@ -9,6 +10,7 @@ public class MyGame : Game
 	public bool _paused = true;
 	int _stepIndex = 0;
 	int _startSceneNumber = 1;
+    AnimationSprite background;
 
     readonly Canvas _lineContainer = null;
     readonly List<Ball> _movers;
@@ -22,10 +24,14 @@ public class MyGame : Game
 
     EasyDraw sphere;
 
+    Reset reset;
     public AnimationSprite femboyBounce;
 
     public MyGame() : base(1920, 1080, false, false)
     {
+        background = new AnimationSprite("assets/background3.png", 1, 1);
+        AddChild(background);
+
         _lineContainer = new Canvas(width, height);
         AddChild(_lineContainer);
 
@@ -61,7 +67,8 @@ public class MyGame : Game
 
         LoadScene(_startSceneNumber);
 
-
+        reset = new Reset(100, (new Vec2(width/2, height/2)));
+        AddChild(reset);
 
         PrintInfo();
     }
@@ -190,6 +197,7 @@ public class MyGame : Game
 
     public void AddGLine(Vec2 start, Vec2 end)
     {
+        //TODO: visual indication
         LineSegment gLine = new LineSegment(start, end, 0xffffff00, 4);
         AddChild(gLine);
         _lines.Add(gLine);
@@ -197,6 +205,11 @@ public class MyGame : Game
         LineSegment gLineBack = new LineSegment(end, start, 0xffffff00, 4);
         AddChild(gLineBack);
         _lines.Add(gLineBack);
+
+        float length = (end - start).Length();
+        Vec2 line = end - start;
+
+
     }
 
     public void RemoveLine(Vec2 start, Vec2 end)
@@ -241,10 +254,13 @@ public class MyGame : Game
 		}
 		_lines.Clear();
 
+
 		gameOver.ClearTransparent();
 		Pause();
         femboyBounce.visible = false;
         HUD.visible = true;
+        
+
 
         // boundary:
         AddLine (new Vec2 (width, height), new Vec2 (0, height));
@@ -444,8 +460,10 @@ public class MyGame : Game
         int[] uitext = _spawner.GetRemainingUses();
         HUD.Fill(255, 255, 255);
         HUD.Text(uitext[0].ToString() + "x", 80, 680);
-        HUD.Text(uitext[0].ToString() + "x", 80, 780);
-        HUD.Text(uitext[0].ToString() + "x", 80, 880);
+        HUD.Text(uitext[1].ToString() + "x", 80, 780);
+        HUD.Text(uitext[2].ToString() + "x", 80, 880);
+
+
     }
 
 	static void Main() {

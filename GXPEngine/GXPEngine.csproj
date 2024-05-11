@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Reset.cs" />
     <Compile Include="Jumppad.cs" />
     <Compile Include="LineEscalator.cs" />
     <Compile Include="Finish.cs" />
