@@ -20,6 +20,7 @@ public class Ball : EasyDraw
 	private int radius;
 	public readonly bool moving;
 
+
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")
 	public float Mass {
@@ -61,7 +62,16 @@ public class Ball : EasyDraw
 			acceleration = new Vec2(0, 0);
 		}
 
-        
+		MyGame mygame = (MyGame)game;
+		if (mygame.secondPlayer && mygame.secondFinish)
+		{
+			Console.WriteLine("two players detected");
+		} 
+
+		if ((mygame.secondFinish && !mygame.secondPlayer) || (!mygame.secondFinish && mygame.secondPlayer))
+		{
+			throw new Exception("amount of finishes and players dont match up");
+		}
     }
 
 	public void SetRadius(int pRadius) // for the small size powerup probably
@@ -118,6 +128,16 @@ public class Ball : EasyDraw
 
         //rotateeee
         rotation += velocity.x;
+		MyGame myGame = (MyGame)game;
+
+		Console.WriteLine(myGame.goals);
+		if (myGame.goals < 1)
+		{
+            myGame.Pause();
+
+            myGame.gameOver.Text("You won", game.width / 2, game.height / 2);
+            myGame.femboyBounce.visible = true;
+        }
 
     }
 
@@ -332,14 +352,17 @@ public class Ball : EasyDraw
 			{
 				this.velocity += new Vec2(0, -30);
 			}
-            else if (otherBall is Finish && this is Player)
+            else if (otherBall is Finish && !(otherBall is Finish2) && this is Player && !(this is Player2))
             {
                 MyGame myGame = (MyGame)game;
                 myGame.RemovePlayer();
-                myGame.Pause();
-
-                myGame.gameOver.Text("You won", game.width / 2, game.height / 2);
-				myGame.femboyBounce.visible = true;
+				myGame.goals--;
+            }
+            else if ((otherBall is Finish2) && (this is Player2))
+            {
+                MyGame myGame = (MyGame)game;
+                myGame.RemoveThisPlayer((Player)this);
+				myGame.goals--;
             }
         }
 		else

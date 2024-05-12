@@ -124,7 +124,7 @@ class Spawner : GameObject
                         break;
                 }
 				if(activeItem != 0 && activeItem != 6) { remainingUses[activeItem] -= 1; } // line is the only item that is not automatically used after one click
-            }
+            } 
 		}
         if (lineStart != new Vec2(-1, -1) && ((MyGame)parent)._paused)
         {

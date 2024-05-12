@@ -1,16 +1,16 @@
 ﻿using System;
 using GXPEngine;
 
-public class Finish : Ball
+public class Finish2 : Finish
 {
     Sprite sprite;
-    public Finish(Vec2 pPosition) : base (30, pPosition, pMoving:false, greenness:250)
-	{
-        sprite = new Sprite("assets/bucket.png", addCollider: false);
+    public Finish2(Vec2 pPosition) : base(pPosition)
+    {
+        sprite = new Sprite("assets/bucket2.png", addCollider: false);
         sprite.height = GetRadius() * 2;
         sprite.width = GetRadius() * 2;
         AddChild(sprite);
         sprite.SetOrigin(30, 30);
-        
+
     }
 }

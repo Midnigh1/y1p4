@@ -22,10 +22,14 @@ public class MyGame : Game
 
     Sound backgroundMusic;
 
-    EasyDraw sphere;
-
-    Reset reset;
     public AnimationSprite femboyBounce;
+
+    public bool secondPlayer;
+    public bool secondFinish;
+    public int goals;
+
+    Player2 player2;
+    Finish2 finish2;
 
     public MyGame() : base(1920, 1080, false, false)
     {
@@ -49,11 +53,11 @@ public class MyGame : Game
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
         Sprite linehud = new Sprite("assets/placeholderCow.png");
-        linehud.SetXY(20, 600);
+        linehud.SetXY(30, 610);
         Sprite itemhud = new Sprite("assets/placeholderCow.png");
-        itemhud.SetXY(20, 700);
+        itemhud.SetXY(30, 710);
         Sprite jumphud = new Sprite("assets/placeholderJumppad.png");
-        jumphud.SetXY(20, 800);
+        jumphud.SetXY(40, 820);
 
         HUD.AddChild(linehud);
         HUD.AddChild(itemhud);
@@ -67,8 +71,6 @@ public class MyGame : Game
 
         LoadScene(_startSceneNumber);
 
-        reset = new Reset(100, (new Vec2(width/2, height/2)));
-        AddChild(reset);
 
         PrintInfo();
     }
@@ -157,18 +159,35 @@ public class MyGame : Game
 		return null;
     }
 
-	public void RemovePlayer()
-	{
+    public void RemovePlayer()
+    {
         foreach (Ball mover in _movers)
         {
+            //TODO: remove all players
             if (mover is Player)
             {
-				_movers.Remove(mover);
+                _movers.Remove(mover);
                 mover.Destroy();
-				break;
+                break;
+            }
+            if (mover is Player2)
+            {
+                _movers.Remove(mover);
+                mover.Destroy();
+                break;
             }
         }
     }
+
+    public void RemoveThisPlayer(Player player)
+    {
+            if (player is Player)
+            {
+                _movers.Remove(player);
+                player.Destroy();
+            }
+    }
+
 
     public void DrawLine(Vec2 start, Vec2 end) {
 		_lineContainer.graphics.DrawLine(Pens.White, start.x, start.y, end.x, end.y);
@@ -198,6 +217,7 @@ public class MyGame : Game
     public void AddGLine(Vec2 start, Vec2 end)
     {
         //TODO: visual indication
+        //TODO: improve feel
         LineSegment gLine = new LineSegment(start, end, 0xffffff00, 4);
         AddChild(gLine);
         _lines.Add(gLine);
@@ -273,14 +293,15 @@ public class MyGame : Game
                 _movers.Add(new Player(30, new Vec2(200, 300)));
                 _movers.Add(new Finish(new Vec2(770, 570)));
 
-				int[] itemUses = new int[] { 5, 5, 5, 0, 0, 0 }; // this being declared here might break something but it shouldn't
+				int[] itemUses = new int[] { 5, 5, 5, 0, 0, 0 , 1 }; // this being declared here might break something but it shouldn't
                 _spawner.SetRemainingUses(itemUses);
                 break;
             case 2: // test level
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0 };
+                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
                 _spawner.SetRemainingUses(itemUses);
 
                 _movers.Add(new Player(30, new Vec2(700, 100)));
+                _movers.Add(new Player2(30, new Vec2(width-700, 100)));
                 _movers.Add(new Enemy(20, new Vec2(650, 500)));
                 _movers.Add(new Enemy(20, new Vec2(700, 500)));
                 _movers.Add(new Enemy(20, new Vec2(750, 500)));
@@ -290,9 +311,11 @@ public class MyGame : Game
                 AddLine(new Vec2(200, 400), new Vec2(200, 600));
                 AddLine(new Vec2(550,0), new Vec2(550, 250));
                 _movers.Add(new Finish(new Vec2(100, 500)));
+                _movers.Add(new Finish2(new Vec2(width-100, 500)));
                 break;
             case 3:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0 };
+                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
+                Console.WriteLine(itemUses.GetValue(1));
                 _spawner.SetRemainingUses(itemUses);
 
                 _movers.Add(new Player(30, new Vec2(1750, 150)));
@@ -302,7 +325,7 @@ public class MyGame : Game
                 _movers.Add(new Finish(new Vec2(350, 1000)));
                 break;
             case 4:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0 };
+                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
                 _spawner.SetRemainingUses(itemUses);
 
                 _movers.Add(new Finish(new Vec2(1273, 993)));
@@ -314,7 +337,7 @@ public class MyGame : Game
                 _movers.Add(new Player(30, new Vec2(666, 50)));
                 break;
             case 5:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0 };
+                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
                 _spawner.SetRemainingUses(itemUses);
 
                 _movers.Add(new Player(30, new Vec2(109, 645)));
@@ -329,7 +352,7 @@ public class MyGame : Game
                 _movers.Add(new Bomb(new Vec2(84, 1048)));
                 break;
             default: // level making
-                itemUses = new int[] { 99, 99, 99, 99, 1, 1 };
+                itemUses = new int[] { 99, 99, 99, 99, 1, 1, 1 };
                 AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
                 AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));
                 _spawner.SetRemainingUses(itemUses);
@@ -339,6 +362,29 @@ public class MyGame : Game
 		foreach (Ball b in _movers) {
 			AddChild(b);
 		}
+
+        finish2 = FindObjectOfType<Finish2>();
+        player2 = FindObjectOfType<Player2>();
+      
+        if (finish2 != null)
+        {
+            secondFinish = true;
+        }
+        else
+        {
+            secondFinish = false;
+        }
+
+        if (player2 != null)
+        {
+            secondPlayer = true;
+            goals = 2;
+        } else
+        {
+            goals = 1;
+            secondPlayer = false;
+        }
+
     }
 
 	/****************************************************************************************/
