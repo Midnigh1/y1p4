@@ -52,7 +52,7 @@ public class MyGame : Game
 
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
-        Sprite linehud = new Sprite("assets/placeholderCow.png");
+        Sprite linehud = new Sprite("assets/placeholderline.png");
         linehud.SetXY(30, 610);
         Sprite itemhud = new Sprite("assets/placeholderCow.png");
         itemhud.SetXY(30, 710);
@@ -232,6 +232,7 @@ public class MyGame : Game
 
     }
 
+    //TODO: make an eraser
     public void RemoveLine(Vec2 start, Vec2 end)
     {
         // Find and remove the forward line segment
@@ -315,7 +316,6 @@ public class MyGame : Game
                 break;
             case 3:
                 itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
-                Console.WriteLine(itemUses.GetValue(1));
                 _spawner.SetRemainingUses(itemUses);
 
                 _movers.Add(new Player(30, new Vec2(1750, 150)));
@@ -410,7 +410,10 @@ public class MyGame : Game
         Console.WriteLine("Z - place a spike");
         Console.WriteLine("F - place finish");
         Console.WriteLine("Press a number to select level (0 is empty level for level making)");
-        Console.WriteLine("Press R to reset level");
+
+
+
+
     }
 
 	void HandleInput() {

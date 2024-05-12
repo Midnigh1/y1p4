@@ -63,10 +63,7 @@ public class Ball : EasyDraw
 		}
 
 		MyGame mygame = (MyGame)game;
-		if (mygame.secondPlayer && mygame.secondFinish)
-		{
-			Console.WriteLine("two players detected");
-		} 
+ 
 
 		if ((mygame.secondFinish && !mygame.secondPlayer) || (!mygame.secondFinish && mygame.secondPlayer))
 		{
@@ -130,7 +127,7 @@ public class Ball : EasyDraw
         rotation += velocity.x;
 		MyGame myGame = (MyGame)game;
 
-		Console.WriteLine(myGame.goals);
+
 		if (myGame.goals < 1)
 		{
             myGame.Pause();
