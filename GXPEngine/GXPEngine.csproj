@@ -44,6 +44,7 @@
     <Compile Include="Player2.cs" />
     <Compile Include="Reset.cs" />
     <Compile Include="Collectable.cs" />
+    <Compile Include="RotatingAxe.cs" />
     <Compile Include="Jumppad.cs" />
     <Compile Include="LineEscalator.cs" />
     <Compile Include="Finish.cs" />

@@ -121,6 +121,11 @@ public class MyGame : Game
 		AddChild(newBall);
     }
 
+    public void AddExistingMover(Ball ball) {
+        _movers.Add(ball);
+        AddChild(ball);
+    }
+
     public void AddEnemy(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls=false)
     {
         Ball newBall = new Enemy(radius, position, velocity, pDestroyedByWalls:pDestroyedByWalls);
@@ -318,6 +323,7 @@ public class MyGame : Game
                 _movers.Add(new Collectable(new Vec2(400, 400)));
                 _movers.Add(new Collectable(new Vec2(500, 500)));
                 _movers.Add(new Collectable(new Vec2(600, 600)));
+                AddChild(new Axe(new Vec2(800, 200)));
 
 				int[] itemUses = new int[] { 5, 5, 5, 0, 0, 0 , 1 }; // this being declared here might break something but it shouldn't
                 _spawner.SetRemainingUses(itemUses);
@@ -552,7 +558,7 @@ public class MyGame : Game
         HUD.Text(uitext[1].ToString() + "x", 80, 780);
         HUD.Text(uitext[2].ToString() + "x", 80, 880);
 
-
+        
     }
 
 	static void Main() {
