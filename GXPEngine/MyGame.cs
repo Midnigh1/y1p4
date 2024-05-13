@@ -202,6 +202,7 @@ public class MyGame : Game
         LineSegment lineBack = new LineSegment(end, start, 0xff00ff00, 4);
         AddChild(lineBack);
         _lines.Add (lineBack);
+        //TODO: max line length
 	}
 
     public void AddEscalator (Vec2 start, Vec2 end, bool reverse=false) {
@@ -351,10 +352,39 @@ public class MyGame : Game
                 _movers.Add(new Enemy(20, new Vec2(1540, 1030)));
                 _movers.Add(new Bomb(new Vec2(84, 1048)));
                 break;
+            case 6:
+                AddLine(new Vec2(106, 319), new Vec2(799, 649));
+                _movers.Add(new Player(30, new Vec2(186, 242)));
+                AddLine(new Vec2(115, 278), new Vec2(1445, 825));
+                _movers.Add(new Bomb(new Vec2(1443, 816)));
+                _movers.Add(new Finish(new Vec2(1400, 333)));
+                _movers.Add(new ShootingEnemy(new Vec2(width/2, 200), new Vec2(width/2, 1920)));
+                break;
+            case 7:
+                AddLine(new Vec2(943, 6), new Vec2(941, 619));
+                AddLine(new Vec2(1438, 6), new Vec2(1438, 232));
+                AddLine(new Vec2(1435, 233), new Vec2(1334, 318));
+                AddLine(new Vec2(1334, 318), new Vec2(1547, 318));
+                AddLine(new Vec2(1436, 230), new Vec2(1547, 315));
+                AddLine(new Vec2(1654, 660), new Vec2(1654, 1002));
+                AddLine(new Vec2(1538, 662), new Vec2(1539, 999));
+                _movers.Add(new Enemy(20, new Vec2(1728, 640)));
+                _movers.Add(new Enemy(20, new Vec2(1650, 642)));
+                _movers.Add(new Enemy(20, new Vec2(1587, 646)));
+                _movers.Add(new Enemy(20, new Vec2(1533, 651)));
+                _movers.Add(new Enemy(20, new Vec2(1459, 656)));
+                AddLine(new Vec2(120, 564), new Vec2(351, 563));
+                AddLine(new Vec2(411, 572), new Vec2(129, 981));
+                _movers.Add(new Enemy(20, new Vec2(369, 515)));
+                _movers.Add(new Enemy(20, new Vec2(437, 559)));
+                _movers.Add(new Enemy(20, new Vec2(470, 632)));
+                _movers.Add(new Player(30, new Vec2(1508, 153)));
+                _movers.Add(new Finish(new Vec2(235, 506)));
+                break;
             default: // level making
                 itemUses = new int[] { 99, 99, 99, 99, 1, 1, 1 };
-                AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
-                AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));
+/*                AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
+                AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));*/
                 _spawner.SetRemainingUses(itemUses);
                 break;
         }
