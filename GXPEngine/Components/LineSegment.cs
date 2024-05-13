@@ -32,6 +32,7 @@ namespace GXPEngine
 		
 		void Update()
 		{
+
 			if(color == 0xffffff00)
             {
 				magnet = true;
