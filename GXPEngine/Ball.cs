@@ -13,6 +13,8 @@ public class Ball : EasyDraw
 	// For ease of testing / changing, we assume every ball has the same acceleration (gravity):
 	public Vec2 acceleration = new Vec2 (0, 0.7f);
 
+	private int maxVelocity = 100;
+
 
 	public Vec2 velocity;
 	public Vec2 position;
@@ -27,7 +29,6 @@ public class Ball : EasyDraw
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")
 
-	//TODO: cap player velocity
 
 	public float Mass {
 		get {
@@ -103,6 +104,11 @@ public class Ball : EasyDraw
 
 	public void Step () {
 		velocity += acceleration; // euler goes whooosh
+
+		if (velocity.Length() > maxVelocity) 
+		{
+			velocity = velocity.Normalized() * maxVelocity;
+		}
 
 		bool repeat = true;
 		while (repeat) // we are not counting collisions at the start of the frame to avoid phasing through objects when things are not moving a lot
