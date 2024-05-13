@@ -34,6 +34,10 @@ class Spawner : GameObject
         }
     }
 
+    public void SetActiveItem(int item) {
+        activeItem = item;
+    }
+
 	public void Controls() 
 	{
 		if (Input.GetKeyDown(Key.A))
@@ -71,7 +75,7 @@ class Spawner : GameObject
             activeItem = 6;
         }
 
-        if (Input.GetMouseButtonDown(0) && ((MyGame)parent)._paused) // activate the item
+        if (Input.GetMouseButtonDown(0) && ((MyGame)parent)._paused && Input.mouseX > 140) // activate the item
         {
 			if (remainingUses[activeItem] > 0) 
 			{
