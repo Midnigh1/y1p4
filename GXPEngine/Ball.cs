@@ -23,6 +23,9 @@ public class Ball : EasyDraw
 
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")
+
+	//TODO: cap player velocity
+
 	public float Mass {
 		get {
 			return radius * radius * _density;

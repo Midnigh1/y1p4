@@ -32,18 +32,8 @@ namespace GXPEngine
 		
 		void Update()
 		{
-			// Check if the mouse is within the bounding box of the line segment
-			if (Input.mouseX > Mathf.Min(start.x, end.x) &&
-				Input.mouseX < Mathf.Max(start.x, end.x) &&
-				Input.mouseY > Mathf.Min(start.y, end.y) &&
-				Input.mouseY < Mathf.Max(start.y, end.y))
-			{
-				// Mouse is hovering over the line segment, change color to red
-				color = 0xffff0000;
-			}
 
-
-			if (color == 0xffffff00)
+			if(color == 0xffffff00)
             {
 				magnet = true;
 			} else
