@@ -21,6 +21,8 @@ public class Ball : EasyDraw
 	public readonly bool moving;
 
 
+	Sound bounceSound;
+
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")
 
@@ -52,6 +54,8 @@ public class Ball : EasyDraw
         position = pPosition;
 		UpdateScreenPosition ();
 		SetOrigin (radius, radius);
+
+		bounceSound = new Sound("assets/metal-pipe-falling-sound.mp3", looping:false);
 
 		Draw (150, greenness, 0);
 
@@ -367,6 +371,7 @@ public class Ball : EasyDraw
         }
 		else
 		{
+			bounceSound.Play();
 			if (col.other is LineEscalator) {
 				this.velocity += ((LineEscalator)col.other).collateralVec().Normalized() * ((LineEscalator)col.other).force;
 			}
