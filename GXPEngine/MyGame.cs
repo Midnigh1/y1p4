@@ -400,6 +400,8 @@ public class MyGame : Game
 		Console.WriteLine("Press B to toggle high/low bounciness.");
 		Console.WriteLine("Press W to toggle extra output text.");*/
 
+        Console.WriteLine("Press R to restart the level");
+        Console.WriteLine("Press N to load the next level");
         Console.WriteLine("Press A/S/D to select ability controlled by mouse");
         Console.WriteLine("Press left mouse button to activate the ability");
         Console.WriteLine("A - draw a line segment (first click selects the start, second click selects the end)");
@@ -410,10 +412,6 @@ public class MyGame : Game
         Console.WriteLine("Z - place a spike");
         Console.WriteLine("F - place finish");
         Console.WriteLine("Press a number to select level (0 is empty level for level making)");
-
-
-
-
     }
 
 	void HandleInput() {
@@ -454,6 +452,10 @@ public class MyGame : Game
 			_lineContainer.graphics.Clear (Color.Black);
 		}*/
 		if (Input.GetKeyDown (Key.R)) {
+			LoadScene (_startSceneNumber);
+		}
+        else if (Input.GetKeyDown (Key.N)) {
+            _startSceneNumber += 1;
 			LoadScene (_startSceneNumber);
 		}
 		for (int i = 0; i < 10; i++)

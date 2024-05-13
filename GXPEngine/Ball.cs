@@ -147,7 +147,7 @@ public class Ball : EasyDraw
 		{
             myGame.Pause();
 
-            myGame.gameOver.Text("You won", game.width / 2, game.height / 2);
+            myGame.gameOver.Text("You won\nPress N to load the next level", game.width / 2, game.height / 2);
             myGame.femboyBounce.visible = true;
 			winSound.Play();
         }
@@ -347,7 +347,7 @@ public class Ball : EasyDraw
                 myGame.RemovePlayer();
                 myGame.Pause();
 
-                myGame.gameOver.Text("Game Over", game.width / 2, game.height / 2);
+                myGame.gameOver.Text("Game Over\nPress R to restart the level", game.width / 2, game.height / 2);
             }
 			// bombs are not family friendly so we will make them into jump pads instead
 			// else if (this is Bomb || otherBall is Bomb)
