@@ -503,6 +503,19 @@ public class MyGame : Game
         HUD.Ellipse (60, 640, 80, 80);
         HUD.Ellipse (60, 740, 80, 80);
         HUD.Ellipse (60, 840, 80, 80);
+        if(Input.GetMouseButtonDown(0)) {
+            if(Input.mouseX > 60 && Input.mouseX < 140) {
+                if(Input.mouseY > 640 && Input.mouseY < 720) {
+                    _spawner.SetActiveItem(0);
+                }
+                else if(Input.mouseY > 740 && Input.mouseY < 820) {
+                    _spawner.SetActiveItem(1);
+                }
+                else if(Input.mouseY > 840 && Input.mouseY < 920) {
+                    _spawner.SetActiveItem(2);
+                }
+            }
+        }
         int[] uitext = _spawner.GetRemainingUses();
         HUD.Fill(255, 255, 255);
         HUD.Text(uitext[0].ToString() + "x", 80, 680);
