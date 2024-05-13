@@ -28,6 +28,8 @@ public class MyGame : Game
     public bool secondFinish;
     public int goals;
 
+    private int collected;
+
     Player2 player2;
     Finish2 finish2;
 
@@ -159,6 +161,26 @@ public class MyGame : Game
 		return null;
     }
 
+    public int GetCollectableNumber()
+    {
+        int a = 0;
+        foreach (Ball mover in _movers)
+        {
+            if (mover is Collectable)
+            {
+				a += 1;
+            }
+        }
+		return a;
+    }
+
+    public int GetCollectedNumber()
+    {
+        return collected;
+    }
+
+    public void AddToCollectedNumber() { collected++; }
+
     public void RemovePlayer()
     {
         foreach (Ball mover in _movers)
@@ -280,7 +302,7 @@ public class MyGame : Game
 		Pause();
         femboyBounce.visible = false;
         HUD.visible = true;
-        
+        collected = 0;
 
 
         // boundary:
@@ -291,8 +313,11 @@ public class MyGame : Game
 
 		switch (sceneNumber) {
 			case 1: // pretty much sandbox
-                _movers.Add(new Player(30, new Vec2(200, 300)));
-                _movers.Add(new Finish(new Vec2(770, 570)));
+                _movers.Add(new Player(30, new Vec2(200, 200)));
+                _movers.Add(new Finish(new Vec2(800, 800)));
+                _movers.Add(new Collectable(new Vec2(400, 400)));
+                _movers.Add(new Collectable(new Vec2(500, 500)));
+                _movers.Add(new Collectable(new Vec2(600, 600)));
 
 				int[] itemUses = new int[] { 5, 5, 5, 0, 0, 0 , 1 }; // this being declared here might break something but it shouldn't
                 _spawner.SetRemainingUses(itemUses);
@@ -353,8 +378,8 @@ public class MyGame : Game
                 break;
             default: // level making
                 itemUses = new int[] { 99, 99, 99, 99, 1, 1, 1 };
-                AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
-                AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));
+                // AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
+                // AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));
                 _spawner.SetRemainingUses(itemUses);
                 break;
         }

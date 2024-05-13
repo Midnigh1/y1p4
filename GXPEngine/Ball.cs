@@ -147,7 +147,7 @@ public class Ball : EasyDraw
 		{
             myGame.Pause();
 
-            myGame.gameOver.Text("You won\nPress N to load the next level", game.width / 2, game.height / 2);
+            myGame.gameOver.Text("You won\nPress N to load the next level\n" + myGame.GetCollectedNumber().ToString() + "/" + (myGame.GetCollectableNumber() + myGame.GetCollectedNumber()).ToString() + " stars collected", game.width / 2, game.height / 2);
             myGame.femboyBounce.visible = true;
 			winSound.Play();
         }
@@ -312,8 +312,12 @@ public class Ball : EasyDraw
         }
 
         UpdateScreenPosition();
-
-        if (col.other is Ball)
+		if (col.other is Collectable) {
+			MyGame myGame = (MyGame)game;
+			myGame.RemoveMover((Collectable)col.other);
+			myGame.AddToCollectedNumber();
+		}
+        else if (col.other is Ball)
         {
             Ball otherBall = (Ball)col.other;
 			
