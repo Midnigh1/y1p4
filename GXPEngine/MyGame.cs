@@ -122,18 +122,19 @@ public class MyGame : Game
 		AddChild(newBall);
     }
 
-    public void AddEnemy(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls = false, bool moving = false)
     public void AddExistingMover(Ball ball) {
         _movers.Add(ball);
         AddChild(ball);
     }
 
+    public void AddEnemy(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls=false)
     {
         Ball newBall = new Enemy(radius, position, velocity, pDestroyedByWalls: pDestroyedByWalls, pMoving: moving);
         _movers.Add(newBall);
         AddChild(newBall);
     }
 
+    public void AddBomb(Vec2 position, Vec2 velocity = new Vec2(), bool moving=false, bool removable = false)
     public void AddEgg(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls = false, bool moving = false)
     {
         Ball newBall = new Egg(radius, position, velocity, pDestroyedByWalls: pDestroyedByWalls, pMoving: moving);
@@ -493,8 +494,8 @@ public class MyGame : Game
                 break;
             default: // level making
                 itemUses = new int[] { 99, 99, 99, 99, 1, 1, 1 };
-                AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
-                AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));
+                // AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
+                // AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));
                 _spawner.SetRemainingUses(itemUses);
                 break;
         }
@@ -711,7 +712,7 @@ public class MyGame : Game
         HUD.Text(uitext[1].ToString() + "x", 80, 780);
         HUD.Text(uitext[2].ToString() + "x", 80, 880);
 
-
+        
     }
 
 	static void Main() {
