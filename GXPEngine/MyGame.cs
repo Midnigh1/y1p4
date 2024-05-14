@@ -114,9 +114,9 @@ public class MyGame : Game
         _movers.Remove(toRemove);
     }
 
-    public void AddMover(int radius, Vec2 position, Vec2 velocity= new Vec2(), bool moving=true, float bounciness=0.6f, byte greenness=200)
+    public void AddMover(int radius, Vec2 position, Vec2 velocity= new Vec2(), bool moving=true, float bounciness=0.6f, bool removable=false)
     {
-		Ball newBall = new Ball(radius, position, velocity, moving, bounciness, greenness);
+		Ball newBall = new Ball(radius, position, velocity, moving, bounciness, removable);
         _movers.Add(newBall);
 		AddChild(newBall);
     }
@@ -133,9 +133,9 @@ public class MyGame : Game
         AddChild(newBall);
     }
 
-    public void AddBomb(Vec2 position, Vec2 velocity = new Vec2(), bool moving=false)
+    public void AddBomb(Vec2 position, Vec2 velocity = new Vec2(), bool moving=false, bool removable = false)
     {
-        Ball newBall = new Bomb(position, velocity, moving);
+        Ball newBall = new Bomb(position, velocity, moving, pRemovable:removable);
         _movers.Add(newBall);
         AddChild(newBall);
     }
@@ -221,12 +221,12 @@ public class MyGame : Game
 	}
 
 	
-	public void AddLine (Vec2 start, Vec2 end) {
-		LineSegment line = new LineSegment (start, end, 0xff00ff00, 4);
+	public void AddLine (Vec2 start, Vec2 end, bool removable=false) {
+		LineSegment line = new LineSegment (start, end, 0xff00ff00, 4, pRemovable:removable);
         AddChild(line);
         _lines.Add(line);
 
-        LineSegment lineBack = new LineSegment(end, start, 0xff00ff00, 4);
+        LineSegment lineBack = new LineSegment(end, start, 0xff00ff00, 4, pRemovable:removable);
         AddChild(lineBack);
         _lines.Add (lineBack);
 	}
@@ -441,7 +441,7 @@ public class MyGame : Game
         Console.WriteLine("Press A/S/D to select ability controlled by mouse");
         Console.WriteLine("Press left mouse button to activate the ability");
         Console.WriteLine("A - draw a line segment (first click selects the start, second click selects the end)");
-        Console.WriteLine("S - spawns a small ball (ignore this one probably idk why we would need it)");
+        Console.WriteLine("S - Eraser");
         Console.WriteLine("D - spawns a jump pad");
         Console.WriteLine("Level making tools:");
         Console.WriteLine("P - place a player");

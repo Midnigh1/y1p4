@@ -88,17 +88,38 @@ class Spawner : GameObject
                         }
                         else
                         {
-                            ((MyGame)parent).AddLine(lineStart, new Vec2(Input.mouseX, Input.mouseY));
+                            // ((MyGame)parent).AddLine(lineStart, new Vec2(Input.mouseX, Input.mouseY), removable:true);
                             Console.WriteLine("AddLine(new Vec2" + lineStart.ToString() + ", new Vec2(" + Input.mouseX.ToString() + ", " + Input.mouseY.ToString() + "));");
                             lineStart.SetXY(-1, -1);
                             remainingUses[activeItem] -= 1;
                         }
                         break;
                     case 1:
-                        ((MyGame)parent).AddMover(10, new Vec2(Input.mouseX, Input.mouseY), moving: false, bounciness: 0.98f);
+                        Ball Eraser = new Ball(10, new Vec2(Input.mouseX, Input.mouseY));
+                        List<Ball> balls = Eraser.GetAllBallOverlaps();
+                        Console.WriteLine(balls.Count);
+                        for (int i = balls.Count - 1; i >= 0; i--) 
+                        {
+                            Console.WriteLine(balls[i]);
+                            if ((balls[i]).IsRemovable())
+                            {
+                                ((MyGame)game).RemoveMover(balls[i]);
+                            }
+                        }
+                        List<LineSegment> lines = Eraser.GetAllLineOverlaps();
+                        Console.WriteLine(lines.Count);
+                        for (int i = lines.Count - 1; i >= 0; i--)
+                        {
+                            LineSegment line = lines[i];
+                            Console.WriteLine(line.removable);
+                            if (line.removable)
+                            {
+                                ((MyGame)game).RemoveLine(line.start, line.end);
+                            }
+                        }
                         break;
                     case 2:
-                        ((MyGame)parent).AddBomb(new Vec2(Input.mouseX, Input.mouseY), moving: false);
+                        ((MyGame)parent).AddBomb(new Vec2(Input.mouseX, Input.mouseY), moving: false, removable:true);
                         Console.WriteLine("_movers.Add(new Bomb(new Vec2(" + Input.mouseX.ToString() + ", " + Input.mouseY.ToString() + ")));");
                         break;
                     case 3:
@@ -135,7 +156,7 @@ class Spawner : GameObject
             ((MyGame)parent).RemoveLine(lineStart, oldMouse);
             if (activeItem == 0)
             {
-                ((MyGame)parent).AddLine(lineStart, new Vec2(Input.mouseX, Input.mouseY));
+                ((MyGame)parent).AddLine(lineStart, new Vec2(Input.mouseX, Input.mouseY), removable:true);
             } else
             {
                 ((MyGame)parent).AddGLine(lineStart, new Vec2(Input.mouseX, Input.mouseY));

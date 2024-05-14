@@ -16,18 +16,20 @@ namespace GXPEngine
 		public uint lineWidth = 1;
 
 		public bool magnet = false;
+		public readonly bool removable;
 
 		public LineSegment (float pStartX, float pStartY, float pEndX, float pEndY, uint pColor = 0xffffffff, uint pLineWidth = 1)
 			: this (new Vec2 (pStartX, pStartY), new Vec2 (pEndX, pEndY), pColor, pLineWidth)
 		{
 		}
 
-		public LineSegment (Vec2 pStart, Vec2 pEnd, uint pColor = 0xffffffff, uint pLineWidth = 1)
+		public LineSegment (Vec2 pStart, Vec2 pEnd, uint pColor = 0xffffffff, uint pLineWidth = 1, bool pRemovable=false)
 		{
 			start = pStart;
 			end = pEnd;
 			color = pColor;
 			lineWidth = pLineWidth;
+			removable = pRemovable;
 		}
 		
 		void Update()
