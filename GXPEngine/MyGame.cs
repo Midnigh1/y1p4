@@ -503,6 +503,11 @@ public class MyGame : Game
         
         foreach (Ball mover in _movers)
         {
+            if(mover.IsMoving()) 
+            {
+                mover.x = Mathf.Round(mover.x);
+                mover.y = Mathf.Round(mover.y);
+            }
             if(mover is Player) { sw.WriteLine("0 " + mover.x.ToString() + " " + mover.y.ToString()); }
             else if (mover is Finish) { sw.WriteLine("1 " + mover.x.ToString() + " " + mover.y.ToString()); }
             else if (mover is Collectable) { sw.WriteLine("2 " + mover.x.ToString() + " " + mover.y.ToString()); }
