@@ -8,7 +8,7 @@ public class ShootingEnemy : Enemy
     Vec2 shotDirection;
     int projectileSpeed = 30;
     int projectileRadius = 5;
-    public ShootingEnemy(Vec2 pPosition, Vec2 pDirection) : base(20, pPosition, pMoving: false, pGreenness: 0)
+    public ShootingEnemy(Vec2 pPosition, Vec2 pDirection) : base(20, pPosition, pMoving: false)
     {
         shotDirection = pDirection;
         position = pPosition;

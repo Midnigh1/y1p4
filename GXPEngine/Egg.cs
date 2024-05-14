@@ -5,7 +5,7 @@ public class Egg : Ball
 {
     Sprite sprite;
     bool destroyedByWalls;
-    public Egg(int pRadius, Vec2 pPosition, Vec2 pVelocity = new Vec2(), float pBounciness = 0.4f, bool pMoving = false, byte pGreenness = 70, bool pDestroyedByWalls = false) : base(pRadius, pPosition, pVelocity: pVelocity, pBounciness: pBounciness, pMoving: pMoving, greenness: pGreenness)
+    public Egg(int pRadius, Vec2 pPosition, Vec2 pVelocity = new Vec2(), float pBounciness = 0.4f, bool pMoving = false, byte pGreenness = 70, bool pDestroyedByWalls = false) : base(pRadius, pPosition, pVelocity: pVelocity, pBounciness: pBounciness, pMoving: pMoving)
     {
         //insert egg joke here
         destroyedByWalls = pDestroyedByWalls;

@@ -114,6 +114,12 @@ public class MyGame : Game
         RemoveChild(toRemove);
         _movers.Remove(toRemove);
     }
+    public void AddEnemy(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls = false)
+    {
+        Ball newBall = new Enemy(radius, position, velocity, pDestroyedByWalls: pDestroyedByWalls);
+        _movers.Add(newBall);
+        AddChild(newBall);
+    }
 
     public void AddMover(int radius, Vec2 position, Vec2 velocity= new Vec2(), bool moving=true, float bounciness=0.6f, bool removable=false)
     {
@@ -127,24 +133,17 @@ public class MyGame : Game
         AddChild(ball);
     }
 
-    public void AddEnemy(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls=false)
+    public void AddBomb(Vec2 position, Vec2 velocity = new Vec2(), bool moving = false, bool removable = false)
     {
-        Ball newBall = new Enemy(radius, position, velocity, pDestroyedByWalls: pDestroyedByWalls, pMoving: moving);
+        Ball newBall = new Bomb(position, velocity, moving, pRemovable: removable);
         _movers.Add(newBall);
         AddChild(newBall);
     }
 
-    public void AddBomb(Vec2 position, Vec2 velocity = new Vec2(), bool moving=false, bool removable = false)
+    
     public void AddEgg(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls = false, bool moving = false)
     {
         Ball newBall = new Egg(radius, position, velocity, pDestroyedByWalls: pDestroyedByWalls, pMoving: moving);
-        _movers.Add(newBall);
-        AddChild(newBall);
-    }
-
-    public void AddBomb(Vec2 position, Vec2 velocity = new Vec2(), bool moving=false)
-    {
-        Ball newBall = new Bomb(position, velocity, moving, pRemovable:removable);
         _movers.Add(newBall);
         AddChild(newBall);
     }
