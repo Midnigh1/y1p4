@@ -61,8 +61,8 @@ public class Ball : EasyDraw
 		UpdateScreenPosition ();
 		SetOrigin (radius, radius);
 
-		bounceSound = new Sound("assets/metal-pipe-falling-sound.mp3", looping:false);
-		winSound = new Sound("assets/what.mp3", looping:false);
+		bounceSound = new Sound("assets/normal bounce.mp3", looping:false);
+		winSound = new Sound("assets/winsound.wav", looping:false);
         loseSound = new Sound("assets/loseSound.wav", looping: false);
 
         Draw (150, 150, 0);
@@ -349,34 +349,34 @@ public class Ball : EasyDraw
 		return lineCollision;
 	}
 
-    void ResolveCollision(CollisionInfo col) {
+	void ResolveCollision(CollisionInfo col) {
 
-		if(col.timeOfImpact == 0) // making sure we don't fall through stuff 
+		if (col.timeOfImpact == 0) // making sure we don't fall through stuff 
 		{
 			position = _oldPosition;
 		}
 		else
 		{
-            position -= velocity * (1 - col.timeOfImpact);
-        }
+			position -= velocity * (1 - col.timeOfImpact);
+		}
 
-        UpdateScreenPosition();
-		if (col.other is Collectable) {
+		UpdateScreenPosition();
+		if (col.other is Collectable)
+		{
 			MyGame myGame = (MyGame)game;
 			myGame.RemoveMover((Collectable)col.other);
 			myGame.AddToCollectedNumber();
 		}
-        else if (col.other is Ball)
-        {
-            Ball otherBall = (Ball)col.other;
-			
+		else if (col.other is Ball)
+		{
+			Ball otherBall = (Ball)col.other;
+
 			if (otherBall.IsMoving())
 			{
-                otherBall.velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
-                velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
-                // ditch the newton, i think i fucked something up
+				otherBall.velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
+				velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
 
-                /*if (col.timeOfImpact == 0)
+				/*if (col.timeOfImpact == 0)
 				{
 					// no newtons laws here so Step doesn't get stuck in an infinite loop
 					otherBall.velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
@@ -389,64 +389,69 @@ public class Ball : EasyDraw
 					velocity = massCenterVelocity - cor * (this.velocity - massCenterVelocity);;
 					otherBall.velocity = massCenterVelocity - cor * (otherBall.velocity - massCenterVelocity);
 				}*/
-            }
-            else
+			}
+			else
 			{
-                velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
-            }
-            if ((otherBall is Enemy && this is Player) || (this is Enemy && otherBall is Player))
-            {
-                MyGame myGame = (MyGame)game;
-                myGame.RemovePlayer();
-                myGame.Pause();
+				velocity.Reflect((otherBall.bounciness + bounciness) / 2, col.normal);
+			}
+			if ((otherBall is Enemy && this is Player) || (this is Enemy && otherBall is Player))
+			{
+				MyGame myGame = (MyGame)game;
+				myGame.RemovePlayer();
+				myGame.Pause();
 				loseSound.Play();
 
-                myGame.gameOver.Text("Game Over\nPress R to restart the level", game.width / 2, game.height / 2);
-            }
+				myGame.gameOver.Text("Game Over\nPress R to restart the level", game.width / 2, game.height / 2);
+			}
 			// bombs are not family friendly so we will make them into jump pads instead
 			// else if (this is Bomb || otherBall is Bomb)
 			// {
-            //     if (this is Bomb)
-            //     {
+			//     if (this is Bomb)
+			//     {
 			// 		((Bomb)this).Explode();
-            //     }
+			//     }
 			// 	else
 			// 	{
 			// 		((Bomb)otherBall).Explode();
 			// 	}
-            // }
-			else if (otherBall is Bomb) 
+			// }
+			else if (this is Player && otherBall is Bomb)
 			{
 				this.velocity += new Vec2(0, -30);
 			}
-            else if (otherBall is Finish && !(otherBall is Finish2) && this is Player && !(this is Player2))
-            {
-                MyGame myGame = (MyGame)game;
-                myGame.RemovePlayer();
+			else if (otherBall is Finish && !(otherBall is Finish2) && this is Player && !(this is Player2))
+			{
+				MyGame myGame = (MyGame)game;
+				myGame.RemovePlayer();
 				myGame.goals--;
-            }
-            else if ((otherBall is Finish2) && (this is Player2))
-            {
-                MyGame myGame = (MyGame)game;
-                myGame.RemoveThisPlayer((Player)this);
-				myGame.goals--;
-            } else if (this is Egg && !(otherBall is Player)){
-                MyGame myGame = (MyGame)game;
-                
 			}
-        }
+			else if ((otherBall is Finish2) && (this is Player2))
+			{
+				MyGame myGame = (MyGame)game;
+				myGame.RemoveThisPlayer((Player)this);
+				myGame.goals--;
+			}
+			else if (this is Egg)
+			{
+				this.Destroy();
+
+			}
+		}
 		else
 		{
 			bounceSound.Play();
-			if (col.other is LineEscalator) {
+			if (col.other is LineEscalator)
+			{
 				this.velocity += ((LineEscalator)col.other).collateralVec().Normalized() * ((LineEscalator)col.other).force;
 			}
-            velocity.Reflect(bounciness, col.normal);
-            if(this is Enemy && ((Enemy)this).IsDestroyedByWalls())
+			velocity.Reflect(bounciness, col.normal);
+			if ((this is Enemy && ((Enemy)this).IsDestroyedByWalls()) || this is Egg)
 			{
 				((MyGame)game).RemoveMover(this);
+				this.Destroy();
+				Console.WriteLine("remov");
 			}
-        }
+		}
     }
 
 	//code not neccecary but im keeping it here just in case

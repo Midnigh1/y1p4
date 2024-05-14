@@ -229,12 +229,20 @@ public class MyGame : Game
 	}
 
 	
-	public void AddLine (Vec2 start, Vec2 end, bool removable=false) {
+	public void AddLine (Vec2 start, Vec2 end, bool removable=false, bool visible = true) {
 		LineSegment line = new LineSegment (start, end, 0xff00ff00, 4, pRemovable:removable);
+        if (visible != true)
+        {
+            line.color = 0x00ffff00;
+        }
         AddChild(line);
         _lines.Add(line);
 
         LineSegment lineBack = new LineSegment(end, start, 0xff00ff00, 4, pRemovable:removable);
+        if (visible != true)
+        {
+            lineBack.color = 0x00ffff00;
+        }
         AddChild(lineBack);
         _lines.Add (lineBack);
         //TODO: max line length
@@ -325,10 +333,19 @@ public class MyGame : Game
 
 
         // boundary:
-        AddLine (new Vec2 (width, height), new Vec2 (0, height));
-		AddLine (new Vec2 (0, height), new Vec2 (0, 0));
-		AddLine (new Vec2 (0, 0), new Vec2 (width, 0));
-		AddLine (new Vec2 (width, 0), new Vec2 (width, height));
+        /* AddLine (new Vec2 (width, height), new Vec2 (0, height));
+         AddLine (new Vec2 (0, height), new Vec2 (0, 0));
+         AddLine (new Vec2 (0, 0), new Vec2 (width, 0));
+         AddLine (new Vec2 (width, 0), new Vec2 (width, height));*/
+
+        AddLine(new Vec2(1801, 1074), new Vec2(1803, 433), visible:false);
+        AddLine(new Vec2(1803, 433), new Vec2(1686, 145), visible:false);
+        AddLine(new Vec2(1686, 145), new Vec2(1471, 3), visible: false);
+        AddLine(new Vec2(1471, 3), new Vec2(446, 4), visible: false);
+        AddLine(new Vec2(446, 4), new Vec2(241, 142), visible: false);
+        AddLine(new Vec2(241, 142), new Vec2(142, 389), visible: false);
+        AddLine(new Vec2(148, 378), new Vec2(146, 1072), visible: false);
+        AddLine(new Vec2(width, height), new Vec2(0, height), visible: false);
 
         string lvlNumStr;
 
@@ -463,11 +480,13 @@ public class MyGame : Game
                 _movers.Add(new Bomb(new Vec2(84, 1048)));*/
                 break;
             case 6:
-                AddLine(new Vec2(106, 319), new Vec2(799, 649));
-                _movers.Add(new Player(30, new Vec2(186, 242)));
+                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
+                _spawner.SetRemainingUses(itemUses);
+                AddLine(new Vec2(106, 319), new Vec2(999, 649));
+                _movers.Add(new Player(30, new Vec2(286, 242)));
                 AddLine(new Vec2(115, 278), new Vec2(1445, 825));
                 _movers.Add(new Bomb(new Vec2(1443, 816)));
-                _movers.Add(new Finish(new Vec2(1400, 333)));
+                //_movers.Add(new Finish(new Vec2(1400, 333)));
                 _movers.Add(new ShootingEnemy(new Vec2(width/2, 200), new Vec2(width/2, 1920)));
                 break;
             case 7:

@@ -7,6 +7,8 @@ public class Axe : AnimationSprite
     Enemy axe2;
     float axeLength = 140;
     Vec2 position;
+
+
 	public Axe (Vec2 pPosition) : base ("assets/rotatingaxe.png", 5, 5)
 	{
         position = pPosition;
@@ -18,7 +20,6 @@ public class Axe : AnimationSprite
         MyGame mygame = (MyGame)game;
         mygame.AddExistingMover(axe1);
         mygame.AddExistingMover(axe2);
-
         // uncomment after debug
         /*axe1.HideSprite();
         axe2.HideSprite();*/

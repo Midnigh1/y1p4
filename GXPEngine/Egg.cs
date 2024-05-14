@@ -5,7 +5,9 @@ public class Egg : Ball
 {
     Sprite sprite;
     bool destroyedByWalls;
-    public Egg(int pRadius, Vec2 pPosition, Vec2 pVelocity = new Vec2(), float pBounciness = 0.4f, bool pMoving = false, byte pGreenness = 70, bool pDestroyedByWalls = false) : base(pRadius, pPosition, pVelocity: pVelocity, pBounciness: pBounciness, pMoving: pMoving)
+    float lifespan;
+
+    public Egg(int pRadius, Vec2 pPosition, Vec2 pVelocity = new Vec2(), float pBounciness = 0.4f, bool pMoving = true, byte pGreenness = 70, bool pDestroyedByWalls = true) : base(pRadius, pPosition, pVelocity: pVelocity, pBounciness: pBounciness, pMoving: pMoving, pRemovable: true)
     {
         //insert egg joke here
         destroyedByWalls = pDestroyedByWalls;
@@ -15,7 +17,7 @@ public class Egg : Ball
         sprite.width = pRadius  * 4;
         sprite.height = pRadius * 4;
         AddChild(sprite);
-       // sprite.SetOrigin(this.width/2, this.height/2);
+        // sprite.SetOrigin(this.width/2, this.height/2);
     }
 
     public bool IsDestroyedByWalls()
