@@ -20,7 +20,17 @@ public class Enemy : Ball
 		return destroyedByWalls;
 	}
 
-	public void Update()
+	public void SetSprite(string filename)
+	{
+		sprite = new Sprite(filename, addCollider: false);
+    }
+
+    public void HideSprite()
+    {
+        sprite.visible = false;
+    }
+
+    public void Update()
 	{
 		
 	}

@@ -301,9 +301,14 @@ public class MyGame : Game
 			line.Destroy();
 		}
 		_lines.Clear();
+        for(int i = GetChildCount() - 1; i > 0; i--)
+        {
+            GameObject obj = GetChildren()[i];
+            if (obj is Axe) { RemoveChild(obj); }
+        }
 
 
-		gameOver.ClearTransparent();
+        gameOver.ClearTransparent();
 		Pause();
         femboyBounce.visible = false;
         HUD.visible = true;

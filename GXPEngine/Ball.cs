@@ -25,6 +25,7 @@ public class Ball : EasyDraw
 
 	Sound bounceSound;
 	Sound winSound;
+	Sound loseSound;
 
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")
@@ -59,8 +60,9 @@ public class Ball : EasyDraw
 
 		bounceSound = new Sound("assets/metal-pipe-falling-sound.mp3", looping:false);
 		winSound = new Sound("assets/what.mp3", looping:false);
+        loseSound = new Sound("assets/loseSound.wav", looping: false);
 
-		Draw (150, greenness, 0);
+        Draw (150, greenness, 0);
 
 		_velocityIndicator = new Arrow(position, new Vec2(0,0), 10);
 		 //AddChild(_velocityIndicator);
@@ -350,6 +352,7 @@ public class Ball : EasyDraw
                 MyGame myGame = (MyGame)game;
                 myGame.RemovePlayer();
                 myGame.Pause();
+				loseSound.Play();
 
                 myGame.gameOver.Text("Game Over\nPress R to restart the level", game.width / 2, game.height / 2);
             }
