@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Security.Policy;
 using GXPEngine;
@@ -13,21 +14,24 @@ public class Ball : EasyDraw
 	// For ease of testing / changing, we assume every ball has the same acceleration (gravity):
 	public Vec2 acceleration = new Vec2 (0, 0.7f);
 
+	private int maxVelocity = 100;
+
 
 	public Vec2 velocity;
 	public Vec2 position;
 
 	private int radius;
 	public readonly bool moving;
+    private readonly bool removable;
 
 
-	Sound bounceSound;
+    Sound bounceSound;
 	Sound winSound;
+	Sound loseSound;
 
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")
 
-	//TODO: cap player velocity
 
 	public float Mass {
 		get {
@@ -44,13 +48,14 @@ public class Ball : EasyDraw
 	private Arrow _velocityIndicator;
 
 	private float _density = 1;
-	public Ball (int pRadius, Vec2 pPosition, Vec2 pVelocity=new Vec2(), bool pMoving=true, float pBounciness=0.6f, byte greenness=150) : base (pRadius*2 + 1, pRadius*2 + 1)
+	public Ball (int pRadius, Vec2 pPosition, Vec2 pVelocity=new Vec2(), bool pMoving=true, float pBounciness=0.6f, bool pRemovable=false) : base (pRadius*2 + 1, pRadius*2 + 1)
 	{
 		radius = pRadius;
 		position = pPosition;
 		velocity = pVelocity;
 		moving = pMoving;
 		bounciness = pBounciness;
+		removable = pRemovable;
 
         position = pPosition;
 		UpdateScreenPosition ();
@@ -58,8 +63,9 @@ public class Ball : EasyDraw
 
 		bounceSound = new Sound("assets/metal-pipe-falling-sound.mp3", looping:false);
 		winSound = new Sound("assets/what.mp3", looping:false);
+        loseSound = new Sound("assets/loseSound.wav", looping: false);
 
-		Draw (150, greenness, 0);
+        Draw (150, 150, 0);
 
 		_velocityIndicator = new Arrow(position, new Vec2(0,0), 10);
 		 //AddChild(_velocityIndicator);
@@ -90,6 +96,11 @@ public class Ball : EasyDraw
 		return radius;
 	}
 
+	public bool IsRemovable()
+	{
+		return removable;
+	}
+
 	void Draw(byte red, byte green, byte blue) {
 		Fill (red, green, blue);
 		Stroke (red, green, blue);
@@ -103,6 +114,11 @@ public class Ball : EasyDraw
 
 	public void Step () {
 		velocity += acceleration; // euler goes whooosh
+
+		if (velocity.Length() > maxVelocity) 
+		{
+			velocity = velocity.Normalized() * maxVelocity;
+		}
 
 		bool repeat = true;
 		while (repeat) // we are not counting collisions at the start of the frame to avoid phasing through objects when things are not moving a lot
@@ -133,7 +149,11 @@ public class Ball : EasyDraw
 		ShowDebugInfo();
 
         //rotateeee
-        rotation += velocity.x;
+		if (this is Player)
+		{
+            rotation += velocity.x;
+        }
+        
 		MyGame myGame = (MyGame)game;
 
 
@@ -141,11 +161,46 @@ public class Ball : EasyDraw
 		{
             myGame.Pause();
 
-            myGame.gameOver.Text("You won", game.width / 2, game.height / 2);
+            myGame.gameOver.Text("You won\nPress N to load the next level\n" + myGame.GetCollectedNumber().ToString() + "/" + (myGame.GetCollectableNumber() + myGame.GetCollectedNumber()).ToString() + " stars collected", game.width / 2, game.height / 2);
             myGame.femboyBounce.visible = true;
 			winSound.Play();
         }
 
+    }
+
+    public List<Ball> GetAllBallOverlaps()
+    {
+        MyGame myGame = (MyGame)game;
+        List<Ball> cols = new List<Ball>();
+        for (int i = 0; i < myGame.GetNumberOfMovers(); i++)
+        {
+            Ball mover = myGame.GetMover(i);
+            if (mover != this)
+            {
+                if ((position - mover.position).Length() <= (radius + mover.GetRadius()))
+                {
+                    cols.Add(mover);
+                }
+            }
+        }
+        return cols;
+    }
+
+    public List<LineSegment> GetAllLineOverlaps()
+    {
+        MyGame myGame = (MyGame)game;
+        List<LineSegment> cols = new List<LineSegment>();
+        for (int i = 0; i < myGame.GetNumberOfLines(); i++)
+        {
+            LineSegment line = myGame.GetLine(i);
+            Vec2 differenceVector = position - line.start;
+            float distToLine = Mathf.Abs(differenceVector.Dot((line.end - line.start).Normal())) - radius;
+            if (distToLine <= radius)
+            {
+                cols.Add(line);
+            }
+        }
+        return cols;
     }
 
     CollisionInfo CheckAllBalls()
@@ -294,7 +349,7 @@ public class Ball : EasyDraw
 		return lineCollision;
 	}
 
-	void ResolveCollision(CollisionInfo col) {
+    void ResolveCollision(CollisionInfo col) {
 
 		if(col.timeOfImpact == 0) // making sure we don't fall through stuff 
 		{
@@ -306,8 +361,12 @@ public class Ball : EasyDraw
         }
 
         UpdateScreenPosition();
-
-        if (col.other is Ball)
+		if (col.other is Collectable) {
+			MyGame myGame = (MyGame)game;
+			myGame.RemoveMover((Collectable)col.other);
+			myGame.AddToCollectedNumber();
+		}
+        else if (col.other is Ball)
         {
             Ball otherBall = (Ball)col.other;
 			
@@ -340,8 +399,9 @@ public class Ball : EasyDraw
                 MyGame myGame = (MyGame)game;
                 myGame.RemovePlayer();
                 myGame.Pause();
+				loseSound.Play();
 
-                myGame.gameOver.Text("Game Over", game.width / 2, game.height / 2);
+                myGame.gameOver.Text("Game Over\nPress R to restart the level", game.width / 2, game.height / 2);
             }
 			// bombs are not family friendly so we will make them into jump pads instead
 			// else if (this is Bomb || otherBall is Bomb)
@@ -370,7 +430,10 @@ public class Ball : EasyDraw
                 MyGame myGame = (MyGame)game;
                 myGame.RemoveThisPlayer((Player)this);
 				myGame.goals--;
-            }
+            } else if (this is Egg && !(otherBall is Player)){
+                MyGame myGame = (MyGame)game;
+                
+			}
         }
 		else
 		{

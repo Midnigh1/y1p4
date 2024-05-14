@@ -2,7 +2,8 @@ using System;
 using GXPEngine;
 using System.Drawing;
 using System.Collections.Generic;
-using System.Runtime.InteropServices;
+using System.IO;
+using System.Configuration;
 
 public class MyGame : Game
 {	
@@ -27,6 +28,8 @@ public class MyGame : Game
     public bool secondPlayer;
     public bool secondFinish;
     public int goals;
+
+    private int collected;
 
     Player2 player2;
     Finish2 finish2;
@@ -112,23 +115,35 @@ public class MyGame : Game
         _movers.Remove(toRemove);
     }
 
-    public void AddMover(int radius, Vec2 position, Vec2 velocity= new Vec2(), bool moving=true, float bounciness=0.6f, byte greenness=200)
+    public void AddMover(int radius, Vec2 position, Vec2 velocity= new Vec2(), bool moving=true, float bounciness=0.6f, bool removable=false)
     {
-		Ball newBall = new Ball(radius, position, velocity, moving, bounciness, greenness);
+		Ball newBall = new Ball(radius, position, velocity, moving, bounciness, removable);
         _movers.Add(newBall);
 		AddChild(newBall);
     }
 
-    public void AddEnemy(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls=false)
+    public void AddEnemy(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls = false, bool moving = false)
+    public void AddExistingMover(Ball ball) {
+        _movers.Add(ball);
+        AddChild(ball);
+    }
+
     {
-        Ball newBall = new Enemy(radius, position, velocity, pDestroyedByWalls:pDestroyedByWalls);
+        Ball newBall = new Enemy(radius, position, velocity, pDestroyedByWalls: pDestroyedByWalls, pMoving: moving);
+        _movers.Add(newBall);
+        AddChild(newBall);
+    }
+
+    public void AddEgg(int radius, Vec2 position, Vec2 velocity = new Vec2(), bool pDestroyedByWalls = false, bool moving = false)
+    {
+        Ball newBall = new Egg(radius, position, velocity, pDestroyedByWalls: pDestroyedByWalls, pMoving: moving);
         _movers.Add(newBall);
         AddChild(newBall);
     }
 
     public void AddBomb(Vec2 position, Vec2 velocity = new Vec2(), bool moving=false)
     {
-        Ball newBall = new Bomb(position, velocity, moving);
+        Ball newBall = new Bomb(position, velocity, moving, pRemovable:removable);
         _movers.Add(newBall);
         AddChild(newBall);
     }
@@ -158,6 +173,26 @@ public class MyGame : Game
         }
 		return null;
     }
+
+    public int GetCollectableNumber()
+    {
+        int a = 0;
+        foreach (Ball mover in _movers)
+        {
+            if (mover is Collectable)
+            {
+				a += 1;
+            }
+        }
+		return a;
+    }
+
+    public int GetCollectedNumber()
+    {
+        return collected;
+    }
+
+    public void AddToCollectedNumber() { collected++; }
 
     public void RemovePlayer()
     {
@@ -194,12 +229,12 @@ public class MyGame : Game
 	}
 
 	
-	public void AddLine (Vec2 start, Vec2 end) {
-		LineSegment line = new LineSegment (start, end, 0xff00ff00, 4);
+	public void AddLine (Vec2 start, Vec2 end, bool removable=false) {
+		LineSegment line = new LineSegment (start, end, 0xff00ff00, 4, pRemovable:removable);
         AddChild(line);
         _lines.Add(line);
 
-        LineSegment lineBack = new LineSegment(end, start, 0xff00ff00, 4);
+        LineSegment lineBack = new LineSegment(end, start, 0xff00ff00, 4, pRemovable:removable);
         AddChild(lineBack);
         _lines.Add (lineBack);
         //TODO: max line length
@@ -275,13 +310,18 @@ public class MyGame : Game
 			line.Destroy();
 		}
 		_lines.Clear();
+        for(int i = GetChildCount() - 1; i > 0; i--)
+        {
+            GameObject obj = GetChildren()[i];
+            if (obj is Axe) { RemoveChild(obj); }
+        }
 
 
-		gameOver.ClearTransparent();
+        gameOver.ClearTransparent();
 		Pause();
         femboyBounce.visible = false;
         HUD.visible = true;
-        
+        collected = 0;
 
 
         // boundary:
@@ -290,10 +330,80 @@ public class MyGame : Game
 		AddLine (new Vec2 (0, 0), new Vec2 (width, 0));
 		AddLine (new Vec2 (width, 0), new Vec2 (width, height));
 
-		switch (sceneNumber) {
+        string lvlNumStr;
+
+        lvlNumStr = ConfigurationManager.AppSettings.Get("levelsNumber");
+        int lvlNum = Convert.ToInt16(lvlNumStr);
+
+        if (sceneNumber <= lvlNum && sceneNumber != 0)
+        {
+            String line;
+            //Pass the file path and file name to the StreamReader constructor
+            StreamReader sr = new StreamReader("levels/" + sceneNumber.ToString() + ".txt"); // cursed btw but i'm lazy
+            //Read the first line of text
+            line = sr.ReadLine();
+            //Continue to read until you reach end of file
+            while (line != null)
+            {
+                //write the line to console window
+                if (line.Length > 0) 
+                {
+                    string[] level = line.Split(' ');
+                    int itemType = Convert.ToInt16(level[0]);
+                    switch(itemType)
+                    {
+                        case 0:
+                            _movers.Add(new Player(30, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                        case 1:
+                            _movers.Add(new Finish(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                        case 2:
+                            _movers.Add(new Collectable(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                        case 3:
+                            AddChild(new Axe(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                        case 4:
+                            _movers.Add(new Player2(30, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                        case 5:
+                            _movers.Add(new Finish2(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                        case 6:
+                            _movers.Add(new Enemy(20, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                        case 7:
+                            AddLine(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2])), new Vec2(Convert.ToInt16(level[3]), Convert.ToInt16(level[4])));
+                            break;
+                        case 8:
+                            _movers.Add(new Bomb(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                    }
+                }
+                //Read the next line
+                line = sr.ReadLine();
+            }
+            //close the file
+            sr.Close();
+            // Console.ReadLine();
+        }
+        else
+        {
+            int[] itemUses = new int[] { 99, 99, 99, 99, 1, 1, 1 };
+            // AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
+            // AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));
+            _spawner.SetRemainingUses(itemUses);
+        }
+
+        switch (sceneNumber) {
 			case 1: // pretty much sandbox
-                _movers.Add(new Player(30, new Vec2(200, 300)));
-                _movers.Add(new Finish(new Vec2(770, 570)));
+                /*_movers.Add(new Player(30, new Vec2(200, 200)));
+                _movers.Add(new Finish(new Vec2(800, 800)));
+                _movers.Add(new Collectable(new Vec2(400, 400)));
+                _movers.Add(new Collectable(new Vec2(500, 500)));
+                _movers.Add(new Collectable(new Vec2(600, 600)));
+                AddChild(new Axe(new Vec2(800, 200)));*/
 
 				int[] itemUses = new int[] { 5, 5, 5, 0, 0, 0 , 1 }; // this being declared here might break something but it shouldn't
                 _spawner.SetRemainingUses(itemUses);
@@ -302,7 +412,7 @@ public class MyGame : Game
                 itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
                 _spawner.SetRemainingUses(itemUses);
 
-                _movers.Add(new Player(30, new Vec2(700, 100)));
+                /*_movers.Add(new Player(30, new Vec2(700, 100)));
                 _movers.Add(new Player2(30, new Vec2(width-700, 100)));
                 _movers.Add(new Enemy(20, new Vec2(650, 500)));
                 _movers.Add(new Enemy(20, new Vec2(700, 500)));
@@ -313,35 +423,35 @@ public class MyGame : Game
                 AddLine(new Vec2(200, 400), new Vec2(200, 600));
                 AddLine(new Vec2(550,0), new Vec2(550, 250));
                 _movers.Add(new Finish(new Vec2(100, 500)));
-                _movers.Add(new Finish2(new Vec2(width-100, 500)));
+                _movers.Add(new Finish2(new Vec2(width-100, 500)));*/
                 break;
             case 3:
                 itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
                 _spawner.SetRemainingUses(itemUses);
 
-                _movers.Add(new Player(30, new Vec2(1750, 150)));
+                /*_movers.Add(new Player(30, new Vec2(1750, 150)));
                 AddLine(new Vec2(1600, 0), new Vec2(1600, 300));
                 AddLine(new Vec2(1300, 457), new Vec2(1300, 1080));
                 AddLine(new Vec2(950, 0), new Vec2(950, 520));
-                _movers.Add(new Finish(new Vec2(350, 1000)));
+                _movers.Add(new Finish(new Vec2(350, 1000)));*/
                 break;
             case 4:
                 itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
                 _spawner.SetRemainingUses(itemUses);
 
-                _movers.Add(new Finish(new Vec2(1273, 993)));
+                /*_movers.Add(new Finish(new Vec2(1273, 993)));
                 AddLine(new Vec2(1050, 634), new Vec2(1050, 1080));
                 AddLine(new Vec2(750, 0), new Vec2(750, 524));
                 AddLine(new Vec2(613, 295), new Vec2(750, 176));
                 AddLine(new Vec2(400, 0), new Vec2(400, 100));
                 AddLine(new Vec2(400, 450), new Vec2(400, 1080));
-                _movers.Add(new Player(30, new Vec2(666, 50)));
+                _movers.Add(new Player(30, new Vec2(666, 50)));*/
                 break;
             case 5:
                 itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
                 _spawner.SetRemainingUses(itemUses);
 
-                _movers.Add(new Player(30, new Vec2(109, 645)));
+                /*_movers.Add(new Player(30, new Vec2(109, 645)));
                 AddLine(new Vec2(711, 712), new Vec2(714, 1069));
                 _movers.Add(new Finish(new Vec2(1297, 1000)));
                 _movers.Add(new Enemy(20, new Vec2(1080, 1030)));
@@ -350,7 +460,7 @@ public class MyGame : Game
                 _movers.Add(new Enemy(20, new Vec2(1400, 1030)));
                 _movers.Add(new Enemy(20, new Vec2(1470, 1030)));
                 _movers.Add(new Enemy(20, new Vec2(1540, 1030)));
-                _movers.Add(new Bomb(new Vec2(84, 1048)));
+                _movers.Add(new Bomb(new Vec2(84, 1048)));*/
                 break;
             case 6:
                 AddLine(new Vec2(106, 319), new Vec2(799, 649));
@@ -383,8 +493,8 @@ public class MyGame : Game
                 break;
             default: // level making
                 itemUses = new int[] { 99, 99, 99, 99, 1, 1, 1 };
-/*                AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
-                AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));*/
+                AddEscalator(new Vec2(1000, 540), new Vec2(200, 540), reverse:true);
+                AddEscalator(new Vec2(1010, 540), new Vec2(1800, 540));
                 _spawner.SetRemainingUses(itemUses);
                 break;
         }
@@ -417,6 +527,44 @@ public class MyGame : Game
 
     }
 
+    void WriteLevelToFile()
+    {
+        int lvlNum = Convert.ToInt16(ConfigurationManager.AppSettings.Get("levelsNumber")) + 1;
+        string path = "levels/" + lvlNum.ToString() + ".txt";
+        File.Create(path).Close();
+        Configuration config=ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
+        config.AppSettings.Settings["levelsNumber"].Value = lvlNum.ToString();
+        config.Save(ConfigurationSaveMode.Modified);
+        ConfigurationManager.RefreshSection("appSettings");
+        StreamWriter sw = new StreamWriter(path);
+        
+        foreach (Ball mover in _movers)
+        {
+            if(mover.IsMoving()) 
+            {
+                mover.x = Mathf.Round(mover.x);
+                mover.y = Mathf.Round(mover.y);
+            }
+            if(mover is Player) { sw.WriteLine("0 " + mover.x.ToString() + " " + mover.y.ToString()); }
+            else if (mover is Finish) { sw.WriteLine("1 " + mover.x.ToString() + " " + mover.y.ToString()); }
+            else if (mover is Collectable) { sw.WriteLine("2 " + mover.x.ToString() + " " + mover.y.ToString()); }
+            else if (mover is Player2) { sw.WriteLine("4 " + mover.x.ToString() + " " + mover.y.ToString()); }
+            else if (mover is Finish2) { sw.WriteLine("5 " + mover.x.ToString() + " " + mover.y.ToString()); }
+            else if (mover is Enemy) { sw.WriteLine("6 " + mover.x.ToString() + " " + mover.y.ToString()); }
+            else if (mover is Bomb) { sw.WriteLine("8 " + mover.x.ToString() + " " + mover.y.ToString()); }
+        }
+        foreach (LineSegment line in _lines)
+        {
+            sw.WriteLine("7 " + line.start.x.ToString() + " " + line.start.y.ToString() + " " + line.end.x.ToString() + " " + line.end.y.ToString());
+        }
+        for (int i = GetChildCount() - 1; i > 0; i--)
+        {
+            GameObject obj = GetChildren()[i];
+            if (obj is Axe) { sw.WriteLine("3 " + obj.x.ToString() + " " + obj.y.ToString()); }
+        }
+        sw.Close();
+    }
+
 	/****************************************************************************************/
 
 	void PrintInfo() {
@@ -430,20 +578,19 @@ public class MyGame : Game
 		Console.WriteLine("Press B to toggle high/low bounciness.");
 		Console.WriteLine("Press W to toggle extra output text.");*/
 
+        Console.WriteLine("Press R to restart the level");
+        Console.WriteLine("Press N to load the next level");
         Console.WriteLine("Press A/S/D to select ability controlled by mouse");
         Console.WriteLine("Press left mouse button to activate the ability");
         Console.WriteLine("A - draw a line segment (first click selects the start, second click selects the end)");
-        Console.WriteLine("S - spawns a small ball (ignore this one probably idk why we would need it)");
+        Console.WriteLine("S - Eraser");
         Console.WriteLine("D - spawns a jump pad");
         Console.WriteLine("Level making tools:");
         Console.WriteLine("P - place a player");
         Console.WriteLine("Z - place a spike");
         Console.WriteLine("F - place finish");
+        Console.WriteLine("Press Q to save the level to a file");
         Console.WriteLine("Press a number to select level (0 is empty level for level making)");
-
-
-
-
     }
 
 	void HandleInput() {
@@ -486,6 +633,10 @@ public class MyGame : Game
 		if (Input.GetKeyDown (Key.R)) {
 			LoadScene (_startSceneNumber);
 		}
+        else if (Input.GetKeyDown (Key.N)) {
+            _startSceneNumber += 1;
+			LoadScene (_startSceneNumber);
+		}
 		for (int i = 0; i < 10; i++)
 		{
 			if (Input.GetKeyDown(48 + i))
@@ -498,6 +649,11 @@ public class MyGame : Game
         {
             UnPause();
             HUD.visible = false;
+        }
+
+        if (Input.GetKeyDown(Key.Q))
+        {
+            WriteLevelToFile();
         }
     }
 

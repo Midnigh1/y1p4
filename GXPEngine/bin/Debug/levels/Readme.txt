@@ -1,0 +1,9 @@
+0 Player
+1 Finish
+2 Collectable
+3 Axe
+4 Player2
+5 Finish2
+6 Enemy
+7 Line
+8 Jumppad

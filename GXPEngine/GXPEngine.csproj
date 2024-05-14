@@ -36,13 +36,18 @@
   </PropertyGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Egg.cs" />
     <Compile Include="Finish2.cs" />
     <Compile Include="Player2.cs" />
     <Compile Include="Reset.cs" />
+    <Compile Include="Collectable.cs" />
+    <Compile Include="RotatingAxe.cs" />
     <Compile Include="Jumppad.cs" />
     <Compile Include="LineEscalator.cs" />
     <Compile Include="Finish.cs" />
