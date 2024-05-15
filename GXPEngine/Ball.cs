@@ -61,6 +61,7 @@ public class Ball : EasyDraw
 		UpdateScreenPosition ();
 		SetOrigin (radius, radius);
 
+
 		bounceSound = new Sound("assets/normal bounce.mp3", looping:false);
 		winSound = new Sound("assets/winsound.wav", looping:false);
         loseSound = new Sound("assets/loseSound.wav", looping: false);
@@ -417,7 +418,7 @@ public class Ball : EasyDraw
 			// }
 			else if (this is Player && otherBall is Bomb)
 			{
-				this.velocity += new Vec2(0, -30);
+				this.velocity += new Vec2(0, -20);
 			}
 			else if (otherBall is Finish && !(otherBall is Finish2) && this is Player && !(this is Player2))
 			{

@@ -1,9 +1,10 @@
 ﻿using System;
 using GXPEngine;
+using TiledMapParser;
 
 public class ShootingEnemy : Enemy
 {
-    int shotCooldown = 1000;
+    int shotCooldown = 1500;
     int shotCooldownRemaining = 200;
     Vec2 shotDirection;
     int projectileSpeed = 10;
@@ -11,16 +12,22 @@ public class ShootingEnemy : Enemy
     MyGame myGame;
     Egg[] eggs;
     Sound eggSound;
-    
-    public ShootingEnemy(Vec2 pPosition, Vec2 pDirection) : base(20, pPosition, pMoving: false, spriteString: "assets/chicken.png")
+    AnimationSprite sheet;
+    Player player;
+    public ShootingEnemy(Vec2 pPosition, Vec2 pDirection) : base(20, pPosition, pMoving: false, spriteString: "assets/empty.png")
     {
+        sheet = new AnimationSprite("assets/CHICKSHEET.png", 2, 1);
+        sheet.width = 75;
+        sheet.height = 75;
+        sheet.SetOrigin(sheet.width/2, sheet.height/2);
+        AddChild(sheet);
         shotDirection = pDirection;
         position = pPosition;
         shotDirection = pDirection.Normalized();
         myGame = (MyGame)game;
         SetOrigin(width/2, height/2);
         eggSound = new Sound("assets/gun.mp3");
-        
+        player = myGame.GetPlayer();
     }
 
     public new void Update()
@@ -35,6 +42,21 @@ public class ShootingEnemy : Enemy
             shotCooldownRemaining -= Time.deltaTime;
         }
 
+        if ( shotCooldownRemaining > 1000)
+        {
+            sheet.SetFrame(1);
+        } else
+        {
+            sheet.SetFrame(0);
+        }
+
+
+/*        if (player != null)
+        {
+            Vec2 toPlayer = player.position - position;
+            Vec2 shootDirection = (toPlayer).Normalized();
+            rotation = shootDirection.GetAngleDegrees() - 90;
+        }*/
     }
 
 /*    private void Shoot()
@@ -64,8 +86,7 @@ public class ShootingEnemy : Enemy
 
     private void Shoot()
     {
-        MyGame myGame = (MyGame)game;
-        Player player = myGame.GetPlayer();
+
 
         if (player != null)
         {
@@ -85,7 +106,7 @@ public class ShootingEnemy : Enemy
                 Vec2 shootDirection = (predictedPlayerPosition).Normalized();
 
 
-                rotation = shootDirection.GetAngleDegrees();
+                rotation = shootDirection.GetAngleDegrees() - 90;
 
                 // Spawn a projectile in the shootDirection
 
