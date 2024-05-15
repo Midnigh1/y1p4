@@ -156,10 +156,10 @@ class Spawner : GameObject
                         }
                         break;
                     case 7:
-                        AddChild(new Axe(new Vec2(Input.mouseX, Input.mouseY)));
+                        ((MyGame)parent).AddChild(new Axe(new Vec2(Input.mouseX, Input.mouseY)));
                         break;
                     case 8:
-                        _movers.Add(new Collectable(new Vec2(Input.mouseX, Input.mouseY)));
+                        ((MyGame)parent).AddExistingMover(new Collectable(new Vec2(Input.mouseX, Input.mouseY)));
                         break;
                 }
 				if(activeItem != 0 && activeItem != 6) { remainingUses[activeItem] -= 1; } // line is the only item that is not automatically used after one click
