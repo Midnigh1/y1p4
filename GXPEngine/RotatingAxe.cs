@@ -14,19 +14,20 @@ public class Axe : AnimationSprite
         position = pPosition;
         SetXY(pPosition.x, pPosition.y);
         SetCycle(0, 21);
-        axe1 = new Enemy(10, pPosition);
-        axe2 = new Enemy(10, pPosition);
+        axe1 = new Enemy(20, pPosition);
+        axe2 = new Enemy(20, pPosition);
         axe2.SetXY(pPosition.x, pPosition.y + 100);
         MyGame mygame = (MyGame)game;
         mygame.AddExistingMover(axe1);
         mygame.AddExistingMover(axe2);
         
-        axe1.HideSprite();
-        axe2.HideSprite();
+        //axe1.HideSprite();
+        //axe2.HideSprite();
     }
 	public void Update()
 	{
-		Animate(0.25f);
+		//Animate(0.25f);
+        Animate(0.25f);
         Vec2 axe1pos = new Vec2(Mathf.Cos((float)this.currentFrame / 21 * 2 * Mathf.PI + Mathf.PI / 2), Mathf.Sin((float)this.currentFrame / 21 * 2 * Mathf.PI + Mathf.PI / 2));
         axe1pos.Normalize();
         axe1pos *= axeLength;

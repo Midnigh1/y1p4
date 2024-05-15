@@ -27,7 +27,7 @@ public class Ball : EasyDraw
 
     Sound bounceSound;
 	Sound winSound;
-	Sound loseSound;
+	protected Sound loseSound;
 
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")

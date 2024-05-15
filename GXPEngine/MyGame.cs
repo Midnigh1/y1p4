@@ -34,6 +34,14 @@ public class MyGame : Game
     Player2 player2;
     Finish2 finish2;
 
+    //TODO: HUD
+    //TODO: ASSET SWICH
+    //TODO: COW ANIMATION
+    //TODO: LINE WHITE
+    //TODO:ANIMATE BUCKET
+    //TODO: SFX
+    //TODO: 
+
     public MyGame() : base(1920, 1080, false, false)
     {
         background = new AnimationSprite("assets/background3.png", 1, 1);
@@ -372,7 +380,7 @@ public class MyGame : Game
                     switch(itemType)
                     {
                         case 0:
-                            _movers.Add(new Player(30, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            _movers.Add(new Player(36, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
                             break;
                         case 1:
                             _movers.Add(new Finish(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
