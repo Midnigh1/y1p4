@@ -59,7 +59,9 @@ public class MyGame : Game
         linehud.SetXY(30, 610);
         Sprite itemhud = new Sprite("assets/placeholderCow.png");
         itemhud.SetXY(30, 710);
-        Sprite jumphud = new Sprite("assets/placeholderJumppad.png");
+        Sprite jumphud = new Sprite("assets/jumppad.png");
+        jumphud.width = 50;
+        jumphud.height = 50;
         jumphud.SetXY(40, 820);
 
         HUD.AddChild(linehud);

@@ -20,9 +20,9 @@ public class Axe : AnimationSprite
         MyGame mygame = (MyGame)game;
         mygame.AddExistingMover(axe1);
         mygame.AddExistingMover(axe2);
-        // uncomment after debug
-        /*axe1.HideSprite();
-        axe2.HideSprite();*/
+        
+        axe1.HideSprite();
+        axe2.HideSprite();
     }
 	public void Update()
 	{
