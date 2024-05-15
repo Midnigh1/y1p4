@@ -70,9 +70,17 @@ class Spawner : GameObject
             activeItem = 5;
             lineStart.SetXY(-1, -1);
         }
-        if (Input.GetKeyDown(Key.Q)) // attempt at making the gravity line
+        if (Input.GetKeyDown(Key.W)) // attempt at making the gravity line
         {
             activeItem = 6;
+        }
+        if (Input.GetKeyDown(Key.X))
+        {
+            activeItem = 7;
+        }
+        if (Input.GetKeyDown(Key.C))
+        {
+            activeItem = 8;
         }
 
         if (Input.GetMouseButtonDown(0) && ((MyGame)parent)._paused && Input.mouseX > 140) // activate the item
@@ -146,6 +154,12 @@ class Spawner : GameObject
                             lineStart.SetXY(-1, -1);
                             remainingUses[activeItem] -= 1;
                         }
+                        break;
+                    case 7:
+                        AddChild(new Axe(new Vec2(Input.mouseX, Input.mouseY)));
+                        break;
+                    case 8:
+                        _movers.Add(new Collectable(new Vec2(Input.mouseX, Input.mouseY)));
                         break;
                 }
 				if(activeItem != 0 && activeItem != 6) { remainingUses[activeItem] -= 1; } // line is the only item that is not automatically used after one click
