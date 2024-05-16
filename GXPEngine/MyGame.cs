@@ -21,8 +21,9 @@ public class MyGame : Game
 	public EasyDraw gameOver;
 	public EasyDraw HUD;
     public Sprite backgrHUD;
+    public EasyDraw hud2;
 
-    Sound backgroundMusic;
+    public Sound backgroundMusic;
 
     public AnimationSprite femboyBounce;
 
@@ -35,12 +36,8 @@ public class MyGame : Game
     Player2 player2;
     Finish2 finish2;
 
-    Font font;
-
-    //TODO: FONT
-    //TODO: COW ANIMATION
     //TODO: ATTEMPT TO FIX EGG PNG ISSUE
-    //TODO: IF BORED, BETTER LEVEL COMPLETE THINGIE
+
 
     public MyGame() : base(1920, 1080, false, false)
     {
@@ -69,8 +66,6 @@ public class MyGame : Game
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
 
-        font = new Font("Comic sans", 15);
-
         Sprite linehud = new Sprite("assets/line.png");
         linehud.SetXY(70, 280);
         Sprite itemhud = new Sprite("assets/eraser.png");
@@ -86,7 +81,7 @@ public class MyGame : Game
 
 
         Sprite star1 = new Sprite("assets/EmptyStarUI.png");
-        star1.SetXY(50,140);
+        star1.SetXY(50, 140);
         Sprite star2 = new Sprite("assets/EmptyStarUI.png");
         star2.SetXY(130, 140);
         Sprite star3 = new Sprite("assets/EmptyStarUI.png");
@@ -96,7 +91,19 @@ public class MyGame : Game
         HUD.AddChild(star2);
         HUD.AddChild(star3);
 
+        Sprite A = new Sprite("assets/kb_a.png");
+        A.SetXY(40, 320);
+        A.SetScaleXY(.5f, .5f);
+        Sprite D = new Sprite("assets/kb_s.png");
+        D.SetXY(40, 480);
+        D.SetScaleXY(.5f, .5f);
+        Sprite S = new Sprite("assets/kb_d.png");
+        S.SetXY(40, 630);
+        S.SetScaleXY(.5f, .5f);
 
+        HUD.AddChild(A);
+        HUD.AddChild(D);
+        HUD.AddChild(S);
 
         femboyBounce = new AnimationSprite("assets/femboy-bounce.png", 8, 8, addCollider:false);
         AddChild(femboyBounce);
@@ -763,11 +770,13 @@ public class MyGame : Game
         }
         int[] uitext = _spawner.GetRemainingUses();
         HUD.Fill(255, 255, 255);
-        HUD.TextFont(font);
-        HUD.Text("Level " + _startSceneNumber.ToString(), 90, 100);
-        HUD.Text(uitext[0].ToString() + "x", 140, 340);
-        HUD.Text(uitext[1].ToString() + "x", 140, 490);
-        HUD.Text(uitext[2].ToString() + "x", 140, 640);
+        HUD.TextFont("Comic Sans MS", 30);
+        HUD.color = 0xff452D09;
+        HUD.Text("Level " + _startSceneNumber.ToString(), 90, 130);
+        HUD.TextFont("Comic Sans MS", 20);
+        HUD.Text(uitext[0].ToString() + "x", 140, 360);
+        HUD.Text(uitext[1].ToString() + "x", 140, 510);
+        HUD.Text(uitext[2].ToString() + "x", 140, 660);
 
 
        

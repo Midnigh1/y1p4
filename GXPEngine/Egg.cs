@@ -5,7 +5,6 @@ public class Egg : Ball
 {
     Sprite sprite;
     bool destroyedByWalls;
-    float lifespan;
 
     public Egg(int pRadius, Vec2 pPosition, Vec2 pVelocity = new Vec2(), float pBounciness = 0.4f, bool pMoving = true, byte pGreenness = 70, bool pDestroyedByWalls = true) : base(pRadius, pPosition, pVelocity: pVelocity, pBounciness: pBounciness, pMoving: pMoving, pRemovable: true)
     {
