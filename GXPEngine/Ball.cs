@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Security.Policy;
 using GXPEngine;
@@ -169,9 +170,74 @@ public class Ball : EasyDraw
 		if (myGame.goals < 1)
 		{
             myGame.Pause();
-
+			Sprite sprite = new Sprite("assets/hud2.png");
+			sprite.SetXY(myGame.width/2, myGame.height/2);
+            myGame.gameOver.DrawSprite(sprite);
+            myGame.gameOver.TextFont("Comic Sans MS", 15);
+			myGame.gameOver.TextAlign(CenterMode.Center, CenterMode.Center);
             myGame.gameOver.Text("You won\nPress N to load the next level\n" + myGame.GetCollectedNumber().ToString() + "/" + (myGame.GetCollectableNumber() + myGame.GetCollectedNumber()).ToString() + " stars collected", game.width / 2, game.height / 2);
-            myGame.femboyBounce.visible = true;
+			int collected = myGame.GetCollectedNumber();
+
+			switch (collected)
+			{
+				case 1:
+                    Sprite star1 = new Sprite("assets/star.png");
+                    star1.SetXY(myGame.width / 2 - 100, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star1);
+
+                    Sprite star2 = new Sprite("assets/EmptyStarUI.png");
+                    star2.SetXY(myGame.width / 2, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star2);
+
+                    Sprite star3 = new Sprite("assets/EmptyStarUI.png");
+                    star3.SetXY(myGame.width / 2 + 100, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star3);
+					break;
+
+				case 2:
+                    Sprite star12 = new Sprite("assets/star.png");
+                    star12.SetXY(myGame.width / 2 - 100, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star12);
+
+                    Sprite star22 = new Sprite("assets/star.png");
+                    star22.SetXY(myGame.width / 2, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star22);
+
+                    Sprite star32 = new Sprite("assets/EmptyStarUI.png");
+                    star32.SetXY(myGame.width / 2 + 100, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star32);
+                    break;
+
+				case 3:
+                    Sprite star13 = new Sprite("assets/star.png");
+                    star13.SetXY(myGame.width / 2 - 100, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star13);
+
+                    Sprite star23 = new Sprite("assets/star.png");
+                    star23.SetXY(myGame.width / 2, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star23);
+
+                    Sprite star33 = new Sprite("assets/star.png");
+                    star33.SetXY(myGame.width / 2 + 100, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star33);
+                    break;
+
+                default:
+                    Sprite star10 = new Sprite("assets/EmptyStarUI.png");
+                    star10.SetXY(myGame.width / 2 - 100, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star10);
+
+                    Sprite star20 = new Sprite("assets/EmptyStarUI.png");
+                    star20.SetXY(myGame.width / 2, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star20);
+
+                    Sprite star30 = new Sprite("assets/EmptyStarUI.png");
+                    star30.SetXY(myGame.width / 2 + 100, myGame.height / 2 + 90);
+                    myGame.gameOver.DrawSprite(star30);
+                    break;
+			}
+
+			// myGame.femboyBounce.visible = true;
 			winSound.Play();
         }
 

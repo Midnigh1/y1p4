@@ -21,8 +21,9 @@ public class MyGame : Game
 	public EasyDraw gameOver;
 	public EasyDraw HUD;
     public Sprite backgrHUD;
+    public EasyDraw hud2;
 
-    Sound backgroundMusic;
+    public Sound backgroundMusic;
 
     public AnimationSprite femboyBounce;
 
@@ -35,10 +36,8 @@ public class MyGame : Game
     Player2 player2;
     Finish2 finish2;
 
-    Font font;
-
     //TODO: ATTEMPT TO FIX EGG PNG ISSUE
-    //TODO: IF BORED, BETTER LEVEL COMPLETE THINGIE
+
 
     public MyGame() : base(1920, 1080, false, false)
     {
@@ -66,8 +65,6 @@ public class MyGame : Game
 
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
-
-        font = new Font("Comic sans", 15);
 
         Sprite linehud = new Sprite("assets/line.png");
         linehud.SetXY(70, 280);
@@ -107,7 +104,6 @@ public class MyGame : Game
         HUD.AddChild(A);
         HUD.AddChild(D);
         HUD.AddChild(S);
-
 
         femboyBounce = new AnimationSprite("assets/femboy-bounce.png", 8, 8, addCollider:false);
         AddChild(femboyBounce);
