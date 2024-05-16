@@ -5,6 +5,7 @@ public class Finish2 : Ball
 {
     AnimationSprite sprite;
     bool animationPlaying;
+    Sound splash;
 
     public Finish2(Vec2 pPosition) : base(30, pPosition, pMoving: false)
     {
@@ -15,6 +16,7 @@ public class Finish2 : Ball
         sprite.SetOrigin(60, 60);
         sprite.SetCycle(8, 1); // Set initial frame to the first frame of the animation
         animationPlaying = false;
+        splash = new Sound("assets/Milk splash.wav");
     }
 
     public void PlayAnimation()
@@ -22,6 +24,7 @@ public class Finish2 : Ball
         sprite.SetCycle(0, 9); // Set cycle to play the entire animation
         sprite.currentFrame = 0; // Start the animation from the beginning
         animationPlaying = true; // Set flag to indicate animation is playing
+        splash.Play();
     }
 
     void Update()
