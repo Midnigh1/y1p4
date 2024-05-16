@@ -5,7 +5,7 @@ public class Finish : Ball
 {
     AnimationSprite sprite;
     bool animationPlaying;
-
+    Sound splash;
     public Finish(Vec2 pPosition) : base(30, pPosition, pMoving: false)
     {
         sprite = new AnimationSprite("assets/animatedBucket.png", 3, 3, addCollider: false);
@@ -15,6 +15,7 @@ public class Finish : Ball
         sprite.SetOrigin(60, 60);
         sprite.SetCycle(8, 1); // Set initial frame to the first frame of the animation
         animationPlaying = false;
+        splash = new Sound("assets/Milk splash.wav");
     }
 
     public void PlayAnimation()
@@ -22,6 +23,7 @@ public class Finish : Ball
         sprite.SetCycle(0, 9); // Set cycle to play the entire animation
         sprite.currentFrame = 0; // Start the animation from the beginning
         animationPlaying = true; // Set flag to indicate animation is playing
+        splash.Play();
     }
 
     void Update()

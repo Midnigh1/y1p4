@@ -8,10 +8,17 @@ public class Player : Ball
 	{
 		sprite = new Sprite("assets/Cow.png", addCollider:false);
 		AddChild(sprite);
-		sprite.width = (int)(2.2f * pRadius);
+		sprite.width = (int)(3f * pRadius);
 		sprite.height = sprite.width;
-		sprite.SetOrigin(pRadius, pRadius);
-        sprite.SetXY(-pRadius, -pRadius);
+        //sprite.SetOrigin(pRadius, pRadius);
+        //sprite.SetXY(-pRadius, -pRadius);
+        sprite.SetOrigin(sprite.width/2, sprite.width/2);
+        sprite.SetXY(-(width / 5f), -(height / 5f));
+
+		if (this is Player2)
+		{
+			sprite.alpha = 0;
+		}
     }
 
 }

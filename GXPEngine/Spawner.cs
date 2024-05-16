@@ -15,9 +15,11 @@ class Spawner : GameObject
 
     private bool addParticles = true;
 
+    Sound sound;
+
     public Spawner() : base() 
 	{
-
+        sound = new Sound("assets/draw.wav");
 	}
 
     public int[] GetRemainingUses()
@@ -100,6 +102,7 @@ class Spawner : GameObject
                         if (lineStart == new Vec2(-1, -1)) 
                         {
                             lineStart.SetXY(Input.mouseX, Input.mouseY);
+                            sound.Play();
                         }
                         else
                         {

@@ -7,6 +7,7 @@ public class Axe : AnimationSprite
     Enemy axe2;
     float axeLength = 140;
     Vec2 position;
+    Sound sound;
 
 
 	public Axe (Vec2 pPosition) : base ("assets/rotatingaxe.png", 5, 5)
@@ -23,6 +24,9 @@ public class Axe : AnimationSprite
         
         axe1.HideSprite();
         axe2.HideSprite();
+
+        sound = new Sound("assets/Axe whoosh.wav");
+
     }
 	public void Update()
 	{
@@ -41,5 +45,10 @@ public class Axe : AnimationSprite
         axe2pos += position;
         axe2pos += new Vec2(this.width / 2, this.height / 2);
         axe2.SetXY(axe2pos);
+
+        if (currentFrame == 11 || currentFrame == 1)
+        {
+            sound.Play(false, 0, 0.2f);
+        }
     }
 }

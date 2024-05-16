@@ -41,7 +41,6 @@ public class MyGame : Game
     //TODO: SFX
     //TODO: ATTEMPT TO FIX EGG PNG ISSUE
     //TODO: IF BORED, BETTER LEVEL COMPLETE THINGIE
-    //TODO: PARTICLES
 
     public MyGame() : base(1920, 1080, false, false)
     {
@@ -64,26 +63,39 @@ public class MyGame : Game
 
 
         backgrHUD = new Sprite("assets/hud.png");
+        backgrHUD.SetXY(-10, -50);
         AddChild(backgrHUD);
 
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
-        
 
-        Sprite linehud = new Sprite("assets/placeholderline.png");
-        linehud.SetXY(80, 330);
+
+        Sprite linehud = new Sprite("assets/line.png");
+        linehud.SetXY(70, 280);
         Sprite itemhud = new Sprite("assets/placeholderCow.png");
-        itemhud.SetXY(80, 480);
-        Sprite jumphud = new Sprite("assets/jumppad.png");
+        itemhud.SetXY(70, 430);
+        Sprite jumphud = new Sprite("assets/jumppad2.png");
         jumphud.width = 50;
         jumphud.height = 50;
-        jumphud.SetXY(80, 630);
+        jumphud.SetXY(70, 580);
 
         HUD.AddChild(linehud);
         HUD.AddChild(itemhud);
         HUD.AddChild(jumphud);
 
-        
+
+        Sprite star1 = new Sprite("assets/EmptyStarUI.png");
+        star1.SetXY(50,140);
+        Sprite star2 = new Sprite("assets/EmptyStarUI.png");
+        star2.SetXY(130, 140);
+        Sprite star3 = new Sprite("assets/EmptyStarUI.png");
+        star3.SetXY(210, 140);
+
+        HUD.AddChild(star1);
+        HUD.AddChild(star2);
+        HUD.AddChild(star3);
+
+
 
         femboyBounce = new AnimationSprite("assets/femboy-bounce.png", 8, 8, addCollider:false);
         AddChild(femboyBounce);
@@ -750,12 +762,13 @@ public class MyGame : Game
         }
         int[] uitext = _spawner.GetRemainingUses();
         HUD.Fill(255, 255, 255);
-        HUD.Text("Level " + _startSceneNumber.ToString(), 100, 200);
-        HUD.Text(uitext[0].ToString() + "x", 150, 390);
-        HUD.Text(uitext[1].ToString() + "x", 150, 540);
-        HUD.Text(uitext[2].ToString() + "x", 150, 690);
+        HUD.Text("Level " + _startSceneNumber.ToString(), 90, 100);
+        HUD.Text(uitext[0].ToString() + "x", 140, 340);
+        HUD.Text(uitext[1].ToString() + "x", 140, 490);
+        HUD.Text(uitext[2].ToString() + "x", 140, 640);
 
-        
+
+       
     }
 
 	static void Main() {

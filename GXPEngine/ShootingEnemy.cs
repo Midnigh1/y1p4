@@ -26,7 +26,7 @@ public class ShootingEnemy : Enemy
         shotDirection = pDirection.Normalized();
         myGame = (MyGame)game;
         SetOrigin(width/2, height/2);
-        eggSound = new Sound("assets/gun.mp3");
+        eggSound = new Sound("assets/Chicken.wav");
         player = myGame.GetPlayer();
     }
 

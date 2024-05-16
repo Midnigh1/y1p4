@@ -7,7 +7,8 @@ using GXPEngine.Core;
 
 public class Ball : EasyDraw
 {
-	// These four public static fields are changed from MyGame, based on key input (see Console):
+	// These four public static fields are changed from MyGame, based on key
+	// (see Console):
 	public static bool drawDebugLine = false;
 	public static bool wordy = false;
 	public float bounciness = 0.6f;
@@ -26,6 +27,7 @@ public class Ball : EasyDraw
 
 
     Sound bounceSound;
+	Sound bigBounceSound;
 	Sound winSound;
 	protected Sound loseSound;
 
@@ -65,6 +67,7 @@ public class Ball : EasyDraw
 		bounceSound = new Sound("assets/normal bounce.mp3", looping:false);
 		winSound = new Sound("assets/winsound.wav", looping:false);
         loseSound = new Sound("assets/loseSound.wav", looping: false);
+		bigBounceSound = new Sound("assets/Jumppad bounce.wav");
 
         Draw (150, 150, 0);
 
@@ -424,6 +427,7 @@ public class Ball : EasyDraw
 			else if (this is Player && otherBall is Bomb)
 			{
 				this.velocity += new Vec2(0, -20);
+				bigBounceSound.Play();
 			}
 			else if (otherBall is Finish && !(otherBall is Finish2) && this is Player && !(this is Player2))
 			{
