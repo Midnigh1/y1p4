@@ -40,7 +40,9 @@ public class MyGame : Game
     //TODO: LINE WHITE
     //TODO:ANIMATE BUCKET
     //TODO: SFX
-    //TODO: 
+    //TODO: ATTEMPT TO FIX EGG PNG ISSUE
+    //TODO: IF BORED, BETTER LEVEL COMPLETE THINGIE
+    //TODO: PARTICLES
 
     public MyGame() : base(1920, 1080, false, false)
     {
