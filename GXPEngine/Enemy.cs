@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using GXPEngine;
 
 public class Enemy : Ball
@@ -35,6 +36,19 @@ public class Enemy : Ball
 
     public void Update()
 	{
-		
-	}
+		List<Ball> balls = GetAllBallOverlaps();
+		//Console.WriteLine(balls.Count);
+		foreach (Ball ball in balls)
+		{
+			if(ball is Player)
+			{
+                MyGame myGame = (MyGame)game;
+                myGame.RemovePlayer();
+                myGame.Pause();
+                loseSound.Play();
+
+                myGame.gameOver.Text("Game Over\nPress R to restart the level", game.width / 2, game.height / 2);
+            }
+        }
+    }
 }

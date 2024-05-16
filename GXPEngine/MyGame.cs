@@ -20,6 +20,7 @@ public class MyGame : Game
 
 	public EasyDraw gameOver;
 	public EasyDraw HUD;
+    public Sprite backgrHUD;
 
     Sound backgroundMusic;
 
@@ -33,6 +34,13 @@ public class MyGame : Game
 
     Player2 player2;
     Finish2 finish2;
+
+    Font font;
+
+    //TODO: FONT
+    //TODO: COW ANIMATION
+    //TODO: ATTEMPT TO FIX EGG PNG ISSUE
+    //TODO: IF BORED, BETTER LEVEL COMPLETE THINGIE
 
     public MyGame() : base(1920, 1080, false, false)
     {
@@ -53,20 +61,42 @@ public class MyGame : Game
         gameOver = new EasyDraw(game.width, game.height);
         AddChild(gameOver);
 
+
+        backgrHUD = new Sprite("assets/hud.png");
+        backgrHUD.SetXY(-10, -50);
+        AddChild(backgrHUD);
+
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
-        Sprite linehud = new Sprite("assets/placeholderline.png");
-        linehud.SetXY(30, 610);
-        Sprite itemhud = new Sprite("assets/placeholderCow.png");
-        itemhud.SetXY(30, 710);
-        Sprite jumphud = new Sprite("assets/jumppad.png");
+
+        font = new Font("Comic sans", 15);
+
+        Sprite linehud = new Sprite("assets/line.png");
+        linehud.SetXY(70, 280);
+        Sprite itemhud = new Sprite("assets/eraser.png");
+        itemhud.SetXY(70, 430);
+        Sprite jumphud = new Sprite("assets/jumppad2.png");
         jumphud.width = 50;
         jumphud.height = 50;
-        jumphud.SetXY(40, 820);
+        jumphud.SetXY(70, 580);
 
         HUD.AddChild(linehud);
         HUD.AddChild(itemhud);
         HUD.AddChild(jumphud);
+
+
+        Sprite star1 = new Sprite("assets/EmptyStarUI.png");
+        star1.SetXY(50,140);
+        Sprite star2 = new Sprite("assets/EmptyStarUI.png");
+        star2.SetXY(130, 140);
+        Sprite star3 = new Sprite("assets/EmptyStarUI.png");
+        star3.SetXY(210, 140);
+
+        HUD.AddChild(star1);
+        HUD.AddChild(star2);
+        HUD.AddChild(star3);
+
+
 
         femboyBounce = new AnimationSprite("assets/femboy-bounce.png", 8, 8, addCollider:false);
         AddChild(femboyBounce);
@@ -75,7 +105,6 @@ public class MyGame : Game
         backgroundMusic.Play();
 
         LoadScene(_startSceneNumber);
-
 
         PrintInfo();
     }
@@ -232,7 +261,7 @@ public class MyGame : Game
 
 	
 	public void AddLine (Vec2 start, Vec2 end, bool removable=false, bool visible = true) {
-		LineSegment line = new LineSegment (start, end, 0xff00ff00, 4, pRemovable:removable);
+		LineSegment line = new LineSegment (start, end, 0xffffffff, 4, pRemovable:removable);
         if (visible != true)
         {
             line.color = 0x00ffff00;
@@ -240,7 +269,7 @@ public class MyGame : Game
         AddChild(line);
         _lines.Add(line);
 
-        LineSegment lineBack = new LineSegment(end, start, 0xff00ff00, 4, pRemovable:removable);
+        LineSegment lineBack = new LineSegment(end, start, 0xffffffff, 4, pRemovable:removable);
         if (visible != true)
         {
             lineBack.color = 0x00ffff00;
@@ -278,7 +307,6 @@ public class MyGame : Game
 
     }
 
-    //TODO: make an eraser
     public void RemoveLine(Vec2 start, Vec2 end)
     {
         // Find and remove the forward line segment
@@ -331,6 +359,7 @@ public class MyGame : Game
 		Pause();
         femboyBounce.visible = false;
         HUD.visible = true;
+        backgrHUD.visible = true;
         collected = 0;
 
 
@@ -372,7 +401,7 @@ public class MyGame : Game
                     switch(itemType)
                     {
                         case 0:
-                            _movers.Add(new Player(30, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            _movers.Add(new Player(36, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
                             break;
                         case 1:
                             _movers.Add(new Finish(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
@@ -384,7 +413,7 @@ public class MyGame : Game
                             AddChild(new Axe(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
                             break;
                         case 4:
-                            _movers.Add(new Player2(30, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            _movers.Add(new Player2(40, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
                             break;
                         case 5:
                             _movers.Add(new Finish2(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
@@ -397,6 +426,9 @@ public class MyGame : Game
                             break;
                         case 8:
                             _movers.Add(new Bomb(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                        case 9:
+                            _movers.Add(new ShootingEnemy(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2])), new Vec2(Convert.ToInt16(level[3]), Convert.ToInt16(level[4]))));
                             break;
                     }
                 }
@@ -610,6 +642,8 @@ public class MyGame : Game
         Console.WriteLine("P - place a player");
         Console.WriteLine("Z - place a spike");
         Console.WriteLine("F - place finish");
+        Console.WriteLine("X - place an axe");
+        Console.WriteLine("C - place a star");
         Console.WriteLine("Press Q to save the level to a file");
         Console.WriteLine("Press a number to select level (0 is empty level for level making)");
     }
@@ -670,6 +704,7 @@ public class MyGame : Game
         {
             UnPause();
             HUD.visible = false;
+            backgrHUD.visible = false;
         }
 
         if (Input.GetKeyDown(Key.Q))
@@ -708,11 +743,11 @@ public class MyGame : Game
             _spawner.Controls();
         }
 		HUD.ClearTransparent();
-		HUD.Fill (100, 100, 100, alpha:100);
-        HUD.Stroke (0, 0, 0);
-        HUD.Ellipse (60, 640, 80, 80);
-        HUD.Ellipse (60, 740, 80, 80);
-        HUD.Ellipse (60, 840, 80, 80);
+		// HUD.Fill (100, 100, 100, alpha:100);
+        // HUD.Stroke (0, 0, 0);
+        // HUD.Ellipse (120, 640, 80, 80);
+        // HUD.Ellipse (120, 740, 80, 80);
+        // HUD.Ellipse (120, 840, 80, 80);
         if(Input.GetMouseButtonDown(0)) {
             if(Input.mouseX > 60 && Input.mouseX < 140) {
                 if(Input.mouseY > 640 && Input.mouseY < 720) {
@@ -728,11 +763,14 @@ public class MyGame : Game
         }
         int[] uitext = _spawner.GetRemainingUses();
         HUD.Fill(255, 255, 255);
-        HUD.Text(uitext[0].ToString() + "x", 80, 680);
-        HUD.Text(uitext[1].ToString() + "x", 80, 780);
-        HUD.Text(uitext[2].ToString() + "x", 80, 880);
+        HUD.TextFont(font);
+        HUD.Text("Level " + _startSceneNumber.ToString(), 90, 100);
+        HUD.Text(uitext[0].ToString() + "x", 140, 340);
+        HUD.Text(uitext[1].ToString() + "x", 140, 490);
+        HUD.Text(uitext[2].ToString() + "x", 140, 640);
 
-        
+
+       
     }
 
 	static void Main() {

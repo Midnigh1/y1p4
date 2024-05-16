@@ -7,7 +7,8 @@ using GXPEngine.Core;
 
 public class Ball : EasyDraw
 {
-	// These four public static fields are changed from MyGame, based on key input (see Console):
+	// These four public static fields are changed from MyGame, based on key
+	// (see Console):
 	public static bool drawDebugLine = false;
 	public static bool wordy = false;
 	public float bounciness = 0.6f;
@@ -26,8 +27,9 @@ public class Ball : EasyDraw
 
 
     Sound bounceSound;
+	Sound bigBounceSound;
 	Sound winSound;
-	Sound loseSound;
+	protected Sound loseSound;
 
 	// Mass = density * volume.
 	// In 2D, we assume volume = area (=all objects are assumed to have the same "depth")
@@ -61,9 +63,11 @@ public class Ball : EasyDraw
 		UpdateScreenPosition ();
 		SetOrigin (radius, radius);
 
+
 		bounceSound = new Sound("assets/normal bounce.mp3", looping:false);
 		winSound = new Sound("assets/winsound.wav", looping:false);
         loseSound = new Sound("assets/loseSound.wav", looping: false);
+		bigBounceSound = new Sound("assets/Jumppad bounce.wav");
 
         Draw (150, 150, 0);
 
@@ -95,6 +99,11 @@ public class Ball : EasyDraw
 	{
 		return radius;
 	}
+
+	public void SetXY(Vec2 pPosition)
+	{
+		position = pPosition;
+    }
 
 	public bool IsRemovable()
 	{
@@ -417,17 +426,21 @@ public class Ball : EasyDraw
 			// }
 			else if (this is Player && otherBall is Bomb)
 			{
-				this.velocity += new Vec2(0, -30);
+				this.velocity += new Vec2(0, -20);
+				bigBounceSound.Play();
 			}
 			else if (otherBall is Finish && !(otherBall is Finish2) && this is Player && !(this is Player2))
 			{
+				((Finish)otherBall).PlayAnimation();
+				Console.WriteLine("rabort");
 				MyGame myGame = (MyGame)game;
 				myGame.RemovePlayer();
 				myGame.goals--;
 			}
 			else if ((otherBall is Finish2) && (this is Player2))
 			{
-				MyGame myGame = (MyGame)game;
+                ((Finish2)otherBall).PlayAnimation();
+                MyGame myGame = (MyGame)game;
 				myGame.RemoveThisPlayer((Player)this);
 				myGame.goals--;
 			}
@@ -439,7 +452,10 @@ public class Ball : EasyDraw
 		}
 		else
 		{
-			bounceSound.Play();
+            if (col.timeOfImpact != 0)
+            {
+                bounceSound.Play();
+            }
 			if (col.other is LineEscalator)
 			{
 				this.velocity += ((LineEscalator)col.other).collateralVec().Normalized() * ((LineEscalator)col.other).force;
