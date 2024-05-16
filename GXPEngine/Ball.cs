@@ -427,14 +427,15 @@ public class Ball : EasyDraw
 			}
 			else if (otherBall is Finish && !(otherBall is Finish2) && this is Player && !(this is Player2))
 			{
-				((Finish)otherBall).playAnimation();
+				((Finish)otherBall).PlayAnimation();
+				Console.WriteLine("rabort");
 				MyGame myGame = (MyGame)game;
 				myGame.RemovePlayer();
 				myGame.goals--;
 			}
 			else if ((otherBall is Finish2) && (this is Player2))
 			{
-                ((Finish2)otherBall).playAnimation();
+                ((Finish2)otherBall).PlayAnimation();
                 MyGame myGame = (MyGame)game;
 				myGame.RemoveThisPlayer((Player)this);
 				myGame.goals--;

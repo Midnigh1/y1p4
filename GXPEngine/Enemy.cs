@@ -37,7 +37,7 @@ public class Enemy : Ball
     public void Update()
 	{
 		List<Ball> balls = GetAllBallOverlaps();
-		Console.WriteLine(balls.Count);
+		//Console.WriteLine(balls.Count);
 		foreach (Ball ball in balls)
 		{
 			if(ball is Player)
