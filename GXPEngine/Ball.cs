@@ -97,6 +97,11 @@ public class Ball : EasyDraw
 		return radius;
 	}
 
+	public void SetXY(Vec2 pPosition)
+	{
+		position = pPosition;
+    }
+
 	public bool IsRemovable()
 	{
 		return removable;
@@ -422,13 +427,15 @@ public class Ball : EasyDraw
 			}
 			else if (otherBall is Finish && !(otherBall is Finish2) && this is Player && !(this is Player2))
 			{
+				((Finish)otherBall).playAnimation();
 				MyGame myGame = (MyGame)game;
 				myGame.RemovePlayer();
 				myGame.goals--;
 			}
 			else if ((otherBall is Finish2) && (this is Player2))
 			{
-				MyGame myGame = (MyGame)game;
+                ((Finish2)otherBall).playAnimation();
+                MyGame myGame = (MyGame)game;
 				myGame.RemoveThisPlayer((Player)this);
 				myGame.goals--;
 			}
@@ -440,7 +447,10 @@ public class Ball : EasyDraw
 		}
 		else
 		{
-			bounceSound.Play();
+            if (col.timeOfImpact != 0)
+            {
+                bounceSound.Play();
+            }
 			if (col.other is LineEscalator)
 			{
 				this.velocity += ((LineEscalator)col.other).collateralVec().Normalized() * ((LineEscalator)col.other).force;

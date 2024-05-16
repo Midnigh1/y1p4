@@ -1,6 +1,7 @@
 ﻿using GXPEngine;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 
 class Spawner : GameObject 
 {
@@ -11,6 +12,8 @@ class Spawner : GameObject
 	Vec2 lineStart = new Vec2(-1, -1); // i use a point outside the screen as a way to know when we don't have a point selected
 
     Vec2 oldMouse = new Vec2(-1, -1);
+
+    private bool addParticles = true;
 
     public Spawner() : base() 
 	{
@@ -81,6 +84,10 @@ class Spawner : GameObject
         if (Input.GetKeyDown(Key.C))
         {
             activeItem = 8;
+        }
+        if (Input.GetKeyDown(Key.F))
+        {
+            addParticles = !addParticles;
         }
 
         if (Input.GetMouseButtonDown(0) && ((MyGame)parent)._paused && Input.mouseX > 140) // activate the item
@@ -181,6 +188,21 @@ class Spawner : GameObject
 
 	public void Update() 
 	{
-		
-	}
+        
+        // For a better setup: you should move all this hard code to a configurable Emitter class!
+        if (addParticles)
+        {
+            if (Utils.Random(0, 10) == 0)
+            { // on average, we spawn a particle every 10 frames
+                Particle newParticle = new Particle("assets/placeholderCow.png", BlendMode.ADDITIVE, 4000);
+                // An example of chaining:
+                newParticle.SetColor(Color.Yellow, Color.Black).
+                    SetScale(0, 0.1f).
+                    SetVelocity(Utils.Random(-0.1f, 0.1f), Utils.Random(-0.1f, 0.1f));
+
+                newParticle.SetXY(Utils.Random(0, game.width), Utils.Random(0, game.height));
+                AddChild(newParticle);
+            }
+        }
+    }
 }
