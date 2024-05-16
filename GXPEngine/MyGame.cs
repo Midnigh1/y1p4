@@ -478,11 +478,11 @@ public class MyGame : Game
                 AddChild(new Axe(new Vec2(800, 200)));*/
                 
 
-				int[] itemUses = new int[] { 5, 5, 5, 0, 0, 0 , 1 }; // this being declared here might break something but it shouldn't
+				int[] itemUses = new int[] { 1, 0, 0, 0, 0, 0, 0 }; // this being declared here might break something but it shouldn't
                 _spawner.SetRemainingUses(itemUses);
                 break;
             case 2: // test level
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
+                itemUses = new int[] { 3, 3, 0, 0, 0, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
 
                 Sprite w1 = new Sprite("assets/wood1.png", addCollider: false);
@@ -519,7 +519,7 @@ public class MyGame : Game
                 _movers.Add(new Finish2(new Vec2(width-100, 500)));*/
                 break;
             case 3:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
+                itemUses = new int[] { 2, 4, 2, 0, 0, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
 
                 Sprite w6 = new Sprite("assets/wood2.png", addCollider: false);
@@ -533,7 +533,7 @@ public class MyGame : Game
                 _movers.Add(new Finish(new Vec2(350, 1000)));*/
                 break;
             case 4:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
+                itemUses = new int[] { 3, 5, 2, 0, 0, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
 
                 Sprite w7 = new Sprite("assets/wood1.png", addCollider: false);
@@ -563,7 +563,7 @@ public class MyGame : Game
                 _movers.Add(new Player(30, new Vec2(666, 50)));*/
                 break;
             case 5:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 1 };
+                itemUses = new int[] { 2, 4, 2, 0, 0, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
 
                 Sprite w11 = new Sprite("assets/wood2.png", addCollider: false);
@@ -582,7 +582,7 @@ public class MyGame : Game
                 _movers.Add(new Bomb(new Vec2(84, 1048)));*/
                 break;
             case 6:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 0 };
+                itemUses = new int[] { 2, 4, 2, 0, 0, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
 
                 Sprite w12 = new Sprite("assets/wood3.png", addCollider: false);
@@ -603,7 +603,7 @@ public class MyGame : Game
                 _movers.Add(new ShootingEnemy(new Vec2(width/2, 200), new Vec2(width/2, 1920)));*/
                 break;
             case 7:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 0 };
+                itemUses = new int[] { 5, 8, 3, 0, 0, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
 
                 Sprite w14 = new Sprite("assets/wood3.png", addCollider: false);
@@ -647,7 +647,7 @@ public class MyGame : Game
                 _movers.Add(new Finish(new Vec2(235, 506)));*/
                 break;
             case 8:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 0 };
+                itemUses = new int[] { 4, 6, 2, 0, 0, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
 
                 Sprite w18 = new Sprite("assets/wood1.png", addCollider: false);
@@ -667,7 +667,7 @@ public class MyGame : Game
 
                 break;
             case 9:
-                itemUses = new int[] { 5, 5, 5, 0, 0, 0, 0 };
+                itemUses = new int[] { 4, 6, 2, 0, 0, 0, 0 };
                 _spawner.SetRemainingUses(itemUses);
 
                 Sprite w21 = new Sprite("assets/wood1.png", addCollider: false);
