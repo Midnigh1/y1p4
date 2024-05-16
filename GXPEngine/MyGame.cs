@@ -20,6 +20,7 @@ public class MyGame : Game
 
 	public EasyDraw gameOver;
 	public EasyDraw HUD;
+    public Sprite backgrHUD;
 
     Sound backgroundMusic;
 
@@ -58,20 +59,28 @@ public class MyGame : Game
         gameOver = new EasyDraw(game.width, game.height);
         AddChild(gameOver);
 
+
+        backgrHUD = new Sprite("assets/hud.png");
+        AddChild(backgrHUD);
+
         HUD = new EasyDraw(game.width, game.height);
         AddChild(HUD);
+        
+
         Sprite linehud = new Sprite("assets/placeholderline.png");
-        linehud.SetXY(30, 610);
+        linehud.SetXY(80, 330);
         Sprite itemhud = new Sprite("assets/placeholderCow.png");
-        itemhud.SetXY(30, 710);
+        itemhud.SetXY(80, 480);
         Sprite jumphud = new Sprite("assets/jumppad.png");
         jumphud.width = 50;
         jumphud.height = 50;
-        jumphud.SetXY(40, 820);
+        jumphud.SetXY(80, 630);
 
         HUD.AddChild(linehud);
         HUD.AddChild(itemhud);
         HUD.AddChild(jumphud);
+
+        
 
         femboyBounce = new AnimationSprite("assets/femboy-bounce.png", 8, 8, addCollider:false);
         AddChild(femboyBounce);
@@ -80,7 +89,6 @@ public class MyGame : Game
         backgroundMusic.Play();
 
         LoadScene(_startSceneNumber);
-
 
         PrintInfo();
     }
@@ -335,6 +343,7 @@ public class MyGame : Game
 		Pause();
         femboyBounce.visible = false;
         HUD.visible = true;
+        backgrHUD.visible = true;
         collected = 0;
 
 
@@ -403,7 +412,7 @@ public class MyGame : Game
                             _movers.Add(new Bomb(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
                             break;
                         case 9:
-                            _movers.Add(new ShootingEnemy(new Vec2(width / 2, 200), new Vec2(width / 2, 1920)));
+                            _movers.Add(new ShootingEnemy(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2])), new Vec2(Convert.ToInt16(level[3]), Convert.ToInt16(level[4]))));
                             break;
                     }
                 }
@@ -679,6 +688,7 @@ public class MyGame : Game
         {
             UnPause();
             HUD.visible = false;
+            backgrHUD.visible = false;
         }
 
         if (Input.GetKeyDown(Key.Q))
@@ -717,11 +727,11 @@ public class MyGame : Game
             _spawner.Controls();
         }
 		HUD.ClearTransparent();
-		HUD.Fill (100, 100, 100, alpha:100);
-        HUD.Stroke (0, 0, 0);
-        HUD.Ellipse (60, 640, 80, 80);
-        HUD.Ellipse (60, 740, 80, 80);
-        HUD.Ellipse (60, 840, 80, 80);
+		// HUD.Fill (100, 100, 100, alpha:100);
+        // HUD.Stroke (0, 0, 0);
+        // HUD.Ellipse (120, 640, 80, 80);
+        // HUD.Ellipse (120, 740, 80, 80);
+        // HUD.Ellipse (120, 840, 80, 80);
         if(Input.GetMouseButtonDown(0)) {
             if(Input.mouseX > 60 && Input.mouseX < 140) {
                 if(Input.mouseY > 640 && Input.mouseY < 720) {
@@ -737,9 +747,10 @@ public class MyGame : Game
         }
         int[] uitext = _spawner.GetRemainingUses();
         HUD.Fill(255, 255, 255);
-        HUD.Text(uitext[0].ToString() + "x", 80, 680);
-        HUD.Text(uitext[1].ToString() + "x", 80, 780);
-        HUD.Text(uitext[2].ToString() + "x", 80, 880);
+        HUD.Text("Level " + _startSceneNumber.ToString(), 100, 200);
+        HUD.Text(uitext[0].ToString() + "x", 150, 390);
+        HUD.Text(uitext[1].ToString() + "x", 150, 540);
+        HUD.Text(uitext[2].ToString() + "x", 150, 690);
 
         
     }
