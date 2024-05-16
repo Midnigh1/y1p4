@@ -37,10 +37,8 @@ public class MyGame : Game
     //TODO: HUD
     //TODO: ASSET SWICH
     //TODO: COW ANIMATION
-    //TODO: LINE WHITE
-    //TODO:ANIMATE BUCKET
+    //TODO: ANIMATE BUCKET
     //TODO: SFX
-    //TODO: 
 
     public MyGame() : base(1920, 1080, false, false)
     {
@@ -240,7 +238,7 @@ public class MyGame : Game
 
 	
 	public void AddLine (Vec2 start, Vec2 end, bool removable=false, bool visible = true) {
-		LineSegment line = new LineSegment (start, end, 0xff00ff00, 4, pRemovable:removable);
+		LineSegment line = new LineSegment (start, end, 0xffffffff, 4, pRemovable:removable);
         if (visible != true)
         {
             line.color = 0x00ffff00;
@@ -248,7 +246,7 @@ public class MyGame : Game
         AddChild(line);
         _lines.Add(line);
 
-        LineSegment lineBack = new LineSegment(end, start, 0xff00ff00, 4, pRemovable:removable);
+        LineSegment lineBack = new LineSegment(end, start, 0xffffffff, 4, pRemovable:removable);
         if (visible != true)
         {
             lineBack.color = 0x00ffff00;
@@ -392,7 +390,7 @@ public class MyGame : Game
                             AddChild(new Axe(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
                             break;
                         case 4:
-                            _movers.Add(new Player2(30, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            _movers.Add(new Player2(40, new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
                             break;
                         case 5:
                             _movers.Add(new Finish2(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
@@ -405,6 +403,9 @@ public class MyGame : Game
                             break;
                         case 8:
                             _movers.Add(new Bomb(new Vec2(Convert.ToInt16(level[1]), Convert.ToInt16(level[2]))));
+                            break;
+                        case 9:
+                            _movers.Add(new ShootingEnemy(new Vec2(width / 2, 200), new Vec2(width / 2, 1920)));
                             break;
                     }
                 }

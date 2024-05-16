@@ -21,8 +21,8 @@ public class Axe : AnimationSprite
         mygame.AddExistingMover(axe1);
         mygame.AddExistingMover(axe2);
         
-        //axe1.HideSprite();
-        //axe2.HideSprite();
+        axe1.HideSprite();
+        axe2.HideSprite();
     }
 	public void Update()
 	{
@@ -33,13 +33,13 @@ public class Axe : AnimationSprite
         axe1pos *= axeLength;
         axe1pos += position;
         axe1pos += new Vec2(this.width / 2, this.height / 2);
-        axe1.SetXY(axe1pos.x, axe1pos.y);
+        axe1.SetXY(axe1pos);
 
         Vec2 axe2pos = new Vec2(Mathf.Cos((float)this.currentFrame / 21 * 2 * Mathf.PI + 3 * Mathf.PI / 2), Mathf.Sin((float)this.currentFrame / 21 * 2 * Mathf.PI + 3 * Mathf.PI / 2));
         axe2pos.Normalize();
         axe2pos *= axeLength;
         axe2pos += position;
         axe2pos += new Vec2(this.width / 2, this.height / 2);
-        axe2.SetXY(axe2pos.x, axe2pos.y);
+        axe2.SetXY(axe2pos);
     }
 }
