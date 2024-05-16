@@ -15,7 +15,7 @@ public class Bomb : Ball
 		sprite.SetXY(sprite.x - 25, sprite.y + 25);
 		sprite.rotation = 270;
 		myGame = (MyGame)game;
-		myGame.AddLine(new Vec2(pPosition.x - 10, pPosition.y + 10), new Vec2(pPosition.x + 10, pPosition.y + 10), true, false);
+		myGame.AddLine(new Vec2(pPosition.x - 40, pPosition.y + 40), new Vec2(pPosition.x + 40, pPosition.y + 40), true, false);
     }
 
 	public void Update()

@@ -37,7 +37,6 @@ public class MyGame : Game
     //TODO: HUD
     //TODO: ASSET SWICH
     //TODO: COW ANIMATION
-    //TODO: ANIMATE BUCKET
     //TODO: SFX
 
     public MyGame() : base(1920, 1080, false, false)
@@ -284,7 +283,6 @@ public class MyGame : Game
 
     }
 
-    //TODO: make an eraser
     public void RemoveLine(Vec2 start, Vec2 end)
     {
         // Find and remove the forward line segment
@@ -619,6 +617,8 @@ public class MyGame : Game
         Console.WriteLine("P - place a player");
         Console.WriteLine("Z - place a spike");
         Console.WriteLine("F - place finish");
+        Console.WriteLine("X - place an axe");
+        Console.WriteLine("C - place a star");
         Console.WriteLine("Press Q to save the level to a file");
         Console.WriteLine("Press a number to select level (0 is empty level for level making)");
     }
